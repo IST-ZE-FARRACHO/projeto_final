@@ -60,7 +60,7 @@ Car * NewCar(char * id, int ta, char type, char inout, int xs, int ys, int zs)
 
 void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, LinkedList * wait_carlist, int st[], long int wt[])
 {
-	int writeOut, y, x, destinedSpot, destinedTime = (p->G->V)*3, destinedAccess, actualPos, prevPos, prevprevPos, i = 0, parent, gotSpot = 0;
+	int writeOut, y, x, destinedSpot, destinedTime = (p->G->V)*3, destinedAccess, actualPos, prevPos, prevprevPos = 0, i = 0, parent, gotSpot = 0;
 	int pX, pY, pZ, origin, totaltime, xspot, yspot;
 	char tm;
 
@@ -117,9 +117,12 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 
 	/*write entrance*/
 	tm = 'i';
+	
 	writeOut = escreve_saida(fp, new->id, new->ta, new->pos->x, new->pos->y, new->pos->z, tm);
 
-	
+	if(writeOut == -1)
+		exit(0);
+
 	/*write movement*/
 	prevPos = origin;
 	actualPos = carPathBackwards[--i];
