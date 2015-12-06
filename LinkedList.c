@@ -250,44 +250,40 @@ LinkedList * insertUnsortedLinkedList(LinkedList * next, Item this)
  *    Returns the pointer to the first node of the sorted linked list.
  */
 
-LinkedList * insertSortedLinkedList(LinkedList * first, Item item, int (* comparisonItemFnt) (Item item1, Item item2), int * err)
-{
+LinkedList * insertSortedLinkedList(LinkedList * first, Item item, int (* comparisonItemFnt) (Item item1, Item item2))
+ {
+
   LinkedList * new;
   LinkedList * aux;
-  LinkedList * tmp = NULL;
+  LinkedList * tmp;
   aux = first;
 
   /* Memory allocation                                            */
   new = (LinkedList *) malloc(sizeof(LinkedList));
   new->this = item;
+  new->next = NULL;
 
   /* Check memory allocation errors                               */
-  if (new == NULL) 
-  {
-    fprintf(stderr, "Error in malloc of linkedlist.\n");
-    exit(0);
-  }
+  if(new == NULL)
+    return NULL;
 
-  /* Íf new is the first node of the list*/
+  /* if new is the first node of the list*/
   if( first == NULL)
   {
     first = new;
     return first;
   }
-
   /* Searching the best place to insert the node */ 
   while (aux != NULL)
   {
     /* if function returns 1 then new found its place*/
     if(comparisonItemFnt(new->this, aux->this) == 1)
     {
-
       if(aux == first)
       {
         new->next = first;
         new = first;
       }
-
       else
       {
         tmp->next = new;
@@ -301,7 +297,6 @@ LinkedList * insertSortedLinkedList(LinkedList * first, Item item, int (* compar
       aux = aux->next;
     }
   }
-
   if(aux == NULL)
   {
       tmp->next = new;
@@ -310,4 +305,3 @@ LinkedList * insertSortedLinkedList(LinkedList * first, Item item, int (* compar
 
   return first;
 }
-

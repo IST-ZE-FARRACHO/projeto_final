@@ -155,7 +155,7 @@ int Char_to_Number (char c)
 
  void Get_edges(Park *p, int vector1[], int vector2[], int nr_columns, int y1, int y2, int _floor)
  {
- 	int x;
+ 	int x, i;
  	long int actual_node1 = Get_Pos(0, y1, _floor, p->N, p->M), actual_node2 = Get_Pos(0, y2, _floor, p->N, p->M);
  	int node_above;
 
@@ -232,6 +232,8 @@ int Char_to_Number (char c)
  		actual_node1++;
  		actual_node2++;
  	}
+
+ 
  }
 
 
@@ -378,14 +380,32 @@ Park *ReadFilePark (char * file)
 
 	if(fgets(line, sizeof(line), f) != NULL); /*carrys on to the second line of the file (line is not used anywhere else)*/
 
-	new_park = NewPark(n, m, e, s, p); /* Creates new park structure */
+	new_park = NewPark(n, m, e, s, p); /*creates new park struct*/
 
-	for(l = 0; l < p; l++)
+	for(l = 0; l < p; l++) /*reads all the info about each floor*/
 	{
-		Read_floor(new_park, f, l, &i, &j); /* Reads each floor */
+		Read_floor(new_park, f, l, &i, &j); /*Read floor function*/
 	}
 
 	FechaFicheiro(f);
 
 	return new_park; /*Returns new_park*/
 }
+
+/*int main(int argc, char *argv[])
+{
+	Park *p;
+	int i;
+
+	p = ReadFilePark(argv[1]);
+
+	int st[p->G->V];
+	long int wt[p->G->V];
+
+	GRAPHpfs(p->G, 30, st, wt);
+
+	for(i = 0; i < 600; i++)
+		printf("Parent: %d  Distance: %ld   Node: %d   Coord: %d %d %d\n", st[i], wt[i], i, p->G->node_info[i].pos->x, p->G->node_info[i].pos->y, p->G->node_info[i].pos->z);
+
+	return 0;
+}*/

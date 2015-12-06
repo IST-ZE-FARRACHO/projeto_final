@@ -206,3 +206,15 @@ int escreve_saida(FILE *fp, char *vid, int tk, int pX, int pY, int pZ, char tm)
 /*end of function */
 
 
+int LessNumRest(Item a, Item b) /*If a < b return 1*/
+{
+
+  Restrictions aa, bb;
+
+  aa = *( (Restrictions *) a );
+  bb = *( (Restrictions *) b );
+
+
+
+  return (aa.ta < bb.ta);
+}

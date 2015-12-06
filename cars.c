@@ -100,9 +100,9 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 
 	GRAPHpfs(p->G, origin, st, wt, 0);
 
-	for(i = 0; i < p->G->V; i++)
+	/*for(i = 0; i < p->G->V; i++)
 		printf("Parent: %d  Distance: %ld   Node: %d   Coord: %d %d %d\n", st[i], wt[i], i, p->G->node_info[i].pos->x, p->G->node_info[i].pos->y, p->G->node_info[i].pos->z);
-
+	*/
 
 	int carPathBackwards[wt[destinedSpot]];
 
@@ -128,7 +128,7 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 	actualPos = carPathBackwards[--i];
 	tm = 'm';
 
-	printf("1");
+
 	while(actualPos != destinedSpot)
 	{
 		new->pos->x = p->G->node_info[actualPos].pos->x;
@@ -150,7 +150,7 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 		actualPos = carPathBackwards[--i];
 		j++;
 	}
-	printf("3");
+
 
 	/*write parking*/
 	tm = 'e';
@@ -210,7 +210,7 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
  * Description: Reads car file and stores info into a list
  *
  *****************************************************************************/
-void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedList * carlist, LinkedList * wait_carlist, int st[], long int wt[])
+void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedList * carlist, LinkedList * wait_carlist, int st[], long int wt[], LinkedList * restrictionlist)
 {
 
 	 FILE *f; 
@@ -243,13 +243,13 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
 
  	do{	
  		
- 		n = fscanf(f, "%s   %d %c %d %d %d", tmpid, &tmpta, &tmptype, &tmpxs, &tmpys, &tmpzs); /* Reads each line*/
+ 		n = fscanf(f, "%s %d %c %d %d %d", tmpid, &tmpta, &tmptype, &tmpxs, &tmpys, &tmpzs); /* Reads each line*/
  		if( n < 3 ) continue;
 
  		if(tmptype != 'S') /*If it is not exit info (it is an entrance)*/
  		{	
 			newc = NewCar(tmpid, tmpta, tmptype, 'E', tmpxs, tmpys, tmpzs); /*Creates new car*/
-			/*Updates Restrictions*/
+			UpdateRestrictions(restrictionlist, p, newc, spots_matrix);
 			carlist = insertUnsortedLinkedList(carlist, (Item) newc); /*Inserts new car in given car list*/
  			WriteParkPath(output, p, newc, spots_matrix, wait_carlist, st, wt); /* Writes on the output file*/
  		}

@@ -199,7 +199,7 @@ LinkedList * insertUnsortedLinkedList(LinkedList * next, Item this);
  *  Return value:
  *    Returns the pointer to the first node of the sorted linked list.
  */
-LinkedList * insertSortedLinkedList(LinkedList * first, Item item, int (* comparisonItemFnt)(Item item1, Item item2), int * err);
+LinkedList * insertSortedLinkedList(LinkedList * first, Item item, int (* comparisonItemFnt) (Item item1, Item item2));
 
 
 
