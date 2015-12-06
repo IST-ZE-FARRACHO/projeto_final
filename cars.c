@@ -100,6 +100,10 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 
 	GRAPHpfs(p->G, origin, st, wt, 0);
 
+	for(i = 0; i < p->G->V; i++)
+		printf("Parent: %d  Distance: %ld   Node: %d   Coord: %d %d %d\n", st[i], wt[i], i, p->G->node_info[i].pos->x, p->G->node_info[i].pos->y, p->G->node_info[i].pos->z);
+
+
 	int carPathBackwards[wt[destinedSpot]];
 
 	carPathBackwards[i] = parent = destinedSpot;
@@ -117,8 +121,8 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 
 	
 	/*write movement*/
+	prevPos = origin;
 	actualPos = carPathBackwards[--i];
-	prevPos = actualPos;
 	tm = 'm';
 	while(actualPos != destinedSpot)
 	{
@@ -131,12 +135,12 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 		
 		else
 		{
-			new->pos->x = p->G->node_info[prevPos].pos->x;
-			new->pos->y = p->G->node_info[prevPos].pos->y;
-			new->pos->z = p->G->node_info[prevPos].pos->z;
+			new->pos->x = p->G->node_info[actualPos].pos->x;
+			new->pos->y = p->G->node_info[actualPos].pos->y;
+			new->pos->z = p->G->node_info[actualPos].pos->z;
+			printf("\n%d %d \n\n", actualPos, prevprevPos);
 			if(p->G->node_info[actualPos].pos->x != p->G->node_info[prevprevPos].pos->x && p->G->node_info[actualPos].pos->y != p->G->node_info[prevprevPos].pos->y){
-				writeOut = escreve_saida(fp, new->id, new->ta + wt[prevPos], new->pos->x, new->pos->y, new->pos->z, tm);
-				printf("ola\n\n");
+				writeOut = escreve_saida(fp, new->id, new->ta + wt[actualPos], new->pos->x, new->pos->y, new->pos->z, tm);
 			}
 		}
 
@@ -157,10 +161,6 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 
 	GRAPHpfs(p->G, actualPos, st, wt, 1);
 	
-
-	for(i = 0; i < p->G->V; i++)
-		printf("Parent: %d  Distance: %ld   Node: %d   Coord: %d %d %d\n", st[i], wt[i], i, p->G->node_info[i].pos->x, p->G->node_info[i].pos->y, p->G->node_info[i].pos->z);
-
 	i = 0;
 	int PedPathBackwards[wt[destinedAccess]];
 	PedPathBackwards[i] = parent = destinedAccess;

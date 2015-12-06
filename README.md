@@ -11,4 +11,3 @@ escolher automaticamente um lugar de estacionamento para essa viatura e ser capa
 Datas:
 9 de Dezembro 12h - 1ª data de entrega do projeto
 Entregar o relatório no SCDEEC entre as 15h e as 16h.
-# projeto_final
