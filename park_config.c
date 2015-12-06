@@ -292,12 +292,12 @@ void Map_to_Park_Graph (Park * p, FILE * f, int _floor)
 
 void Read_Doors_info (Park * p, FILE * f, long int *i, long int *j) /*i, j, declare where to start inserting entries or accesses in the vectors*/
 {
-	int door_x, door_y, door_z, doors = 0, filescan;
+	int door_x, door_y, door_z, doors = 0;
 	char door_name[NAME_SIZE], door_type; 
 
 	while(doors < p->E + p->S) /*reads lines until the number of entries + accesses is reached*/
 	{
-		filescan = fscanf(f, "%s %d %d %d %c", door_name, &door_x, &door_y, &door_z, &door_type); /*reads the first line with the dimensions, etc...*/
+		if( (fscanf(f, "%s %d %d %d %c", door_name, &door_x, &door_y, &door_z, &door_type)) > 0); /*reads the first line with the dimensions, etc...*/
 		if (door_name[0] == 'E')  /*if its an entry inserts the information in the p->entries vector*/
 		{
 			strcpy(p->entries[(*i)].name, door_name);
@@ -365,7 +365,7 @@ void Read_floor (Park * p, FILE * f, int _floor, long int *i, long int *j) /*i, 
 
 Park *ReadFilePark (char * file)
 {
-	int l = 0, n, m, p, e, s, filescan;
+	int l = 0, n, m, p, e, s;
 	long int i = 0, j = 0;
 	char line [NAME_SIZE];
 
@@ -374,7 +374,7 @@ Park *ReadFilePark (char * file)
 
 	f = AbreFicheiro(file, "r");
 
-	filescan = fscanf(f, "%d %d %d %d %d", &n, &m, &p, &e, &s); /*Reads initial file info*/
+	if( (fscanf(f, "%d %d %d %d %d", &n, &m, &p, &e, &s)) > 0); /*Reads initial file info*/
 
 	if(fgets(line, sizeof(line), f) != NULL); /*carrys on to the second line of the file (line is not used anywhere else)*/
 

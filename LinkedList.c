@@ -254,7 +254,7 @@ LinkedList * insertSortedLinkedList(LinkedList * first, Item item, int (* compar
 {
   LinkedList * new;
   LinkedList * aux;
-  LinkedList * tmp;
+  LinkedList * tmp = NULL;
   aux = first;
 
   /* Memory allocation                                            */

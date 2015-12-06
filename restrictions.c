@@ -62,7 +62,7 @@ Restrictions *NewRestrictions(int rest_type, int ta, char inout, int x, int y, i
  *****************************************************************************/
 LinkedList * ReadRestrictsFile(char * file, LinkedList * restrictionslist)
 {
-	int ta, tb, ind, ex, ey, ez, nr_reads;
+	int ta, tb, ex, ey, ez, nr_reads;
 	char r;
 	Restrictions * aux;
 
@@ -70,7 +70,7 @@ LinkedList * ReadRestrictsFile(char * file, LinkedList * restrictionslist)
 
 	f = AbreFicheiro(file, "r");
 
-	while((nr_reads = fscanf(f, "%s %d %d %d %d %d", &r, &ta, &tb, &ind, &ey, &ez))) /*Reads each line of the file*/
+	while((nr_reads = fscanf(f, "%s %d %d %d %d %d", &r, &ta, &tb, &ex, &ey, &ez))) /*Reads each line of the file*/
 	{
 		if(nr_reads == 4) /*Its a floor restriction - use type = 1*/
 		{	
@@ -133,7 +133,7 @@ void UpdateRestrictions(LinkedList * restrictionslist, Park * park, Car * new, P
 						{	
 							for(x = 0; x < park->Spots; x++)
 							{
-								if(spots_matrix[y][x].node = nmbr) /* If it finds a Spot with the same coordinates */
+								if(spots_matrix[y][x].node == nmbr) /* If it finds a Spot with the same coordinates */
 									spots_matrix[y][x].status = CANT_GO; /* Blocks it */
 							}
 						}
@@ -175,7 +175,7 @@ void UpdateRestrictions(LinkedList * restrictionslist, Park * park, Car * new, P
 						{	
 							for(x = 0; x < park->Spots; x++)
 							{
-								if(spots_matrix[y][x].node = nmbr) /* If it finds a Spot with the same coordinates */
+								if(spots_matrix[y][x].node == nmbr) /* If it finds a Spot with the same coordinates */
 									spots_matrix[y][x].status = CAN_GO; /* Allows it */
 							}
 						}
