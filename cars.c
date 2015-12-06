@@ -212,8 +212,7 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
  *****************************************************************************/
 void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedList * carlist, LinkedList * wait_carlist, int st[], long int wt[])
 {
-/*DEFINE OUTPUT FILE*/
-	/*OPEN OUTPUT FILE*/
+
 	 FILE *f; 
 	 FILE *output;
 
@@ -239,8 +238,8 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
 
   	strcat(fileNameOut, extOut);
 
- 	f = AbreFicheiro(file, "r");
- 	output = AbreFicheiro(fileNameOut, "w");
+ 	f = AbreFicheiro(file, "r"); /* Opens input file */
+ 	output = AbreFicheiro(fileNameOut, "w"); /* Opens output file */
 
  	do{	
  		
@@ -250,39 +249,38 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
  		if(tmptype != 'S') /*If it is not exit info (it is an entrance)*/
  		{	
 			newc = NewCar(tmpid, tmpta, tmptype, 'E', tmpxs, tmpys, tmpzs); /*Creates new car*/
-			/*Update Restrictions*/
+			/*Updates Restrictions*/
 			carlist = insertUnsortedLinkedList(carlist, (Item) newc); /*Inserts new car in given car list*/
- 			WriteParkPath(output, p, newc, spots_matrix, wait_carlist, st, wt); /*writes on the output file*/
+ 			WriteParkPath(output, p, newc, spots_matrix, wait_carlist, st, wt); /* Writes on the output file*/
  		}
 
  		else
  		{
- 			if(n > 3)/*if a car from the begining is leaving*/
+ 			if(n > 3) /* If it is a spot liberation*/
  			{
- 				leavePos = Get_Pos(tmpxs, tmpys, tmpzs, p->N, p->M);
- 				p->G->node_info[leavePos].status = CAN_GO;
- 				p->G->node_info[leavePos].type = EMPTY_SPOT;
+ 				leavePos = Get_Pos(tmpxs, tmpys, tmpzs, p->N, p->M); /* Gets the leaving position */
+ 				p->G->node_info[leavePos].status = CAN_GO; /* Lifts block */
+ 				p->G->node_info[leavePos].type = EMPTY_SPOT; /* It is now an empty spot */
  			}
  
- 			if(n == 3) /*Exit case -> Car is in carlist, register exit time*/
+ 			if(n == 3) /*Exit case - Car is in carlist, register exit time*/
  			{	
- 				for(aux = carlist; aux->next != NULL; aux = aux->next)
+ 				for(aux = carlist; aux->next != NULL; aux = aux->next) /* Searches carlist */
  				{
- 					searchcar = (Car *) getItemLinkedList(aux);
+ 					searchcar = (Car *) getItemLinkedList(aux); /* Gets it from the abstract structure */
 
- 					if(strcmp(searchcar->id, tmpid) == 0)
+ 					if(strcmp(searchcar->id, tmpid) == 0) /* If it matches the ID */
  					{
- 						/*updates graph*/
  						leavePos = Get_Pos(searchcar->pos->x, searchcar->pos->y, searchcar->pos->z, p->N, p->M);
- 						/*updates spots_matrix*/
+ 		
  						for(y = 0; y < p->S; y++)
 						{
 							for(x = 0; x < p->Spots; x++)
 							{
 								if(leavePos == spots_matrix[y][x].node)
 								{
-									spots_matrix[y][x].status = CAN_GO;
-									p->G->node_info[leavePos].status = CAN_GO;
+									spots_matrix[y][x].status = CAN_GO; /* Updates spots matrix */
+									p->G->node_info[leavePos].status = CAN_GO; /* Updates graph info */
 								}
 
 							}

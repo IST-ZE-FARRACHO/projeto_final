@@ -15,9 +15,9 @@ int main(int argc, char *argv[])
 	Park * park;
 	Parking_spot **spots_matrix;
 
-	LinkedList * carlist, * wait_carlist, * restrictionlist; /*Declares list*/
+	LinkedList * carlist, * wait_carlist, * restrictionlist; /* Declares list */
 
-	park = ReadFilePark(argv[1]); /*Reads, allocates, and fills park matrix*/
+	park = ReadFilePark(argv[1]); /* Reads, allocates, and fills park matrix */
 
 	carlist = initLinkedList();
 	wait_carlist = initLinkedList();

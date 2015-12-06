@@ -68,7 +68,7 @@ Park *NewPark(int columns, int lines, int entrances, int nr_accesses, int floors
  		}
  	}	
 
- 	p->G = GRAPHinit(columns*lines*floors);
+ 	p->G = GRAPHinit(columns*lines*floors); /* Allocates Graph structures */
 
 	p->N = columns;
 	p->M = lines;
@@ -378,32 +378,14 @@ Park *ReadFilePark (char * file)
 
 	if(fgets(line, sizeof(line), f) != NULL); /*carrys on to the second line of the file (line is not used anywhere else)*/
 
-	new_park = NewPark(n, m, e, s, p); /*creates new park struct*/
+	new_park = NewPark(n, m, e, s, p); /* Creates new park structure */
 
-	for(l = 0; l < p; l++) /*reads all the info about each floor*/
+	for(l = 0; l < p; l++)
 	{
-		Read_floor(new_park, f, l, &i, &j); /*Read floor function*/
+		Read_floor(new_park, f, l, &i, &j); /* Reads each floor */
 	}
 
 	FechaFicheiro(f);
 
 	return new_park; /*Returns new_park*/
 }
-
-/*int main(int argc, char *argv[])
-{
-	Park *p;
-	int i;
-
-	p = ReadFilePark(argv[1]);
-
-	int st[p->G->V];
-	long int wt[p->G->V];
-
-	GRAPHpfs(p->G, 30, st, wt);
-
-	for(i = 0; i < 600; i++)
-		printf("Parent: %d  Distance: %ld   Node: %d   Coord: %d %d %d\n", st[i], wt[i], i, p->G->node_info[i].pos->x, p->G->node_info[i].pos->y, p->G->node_info[i].pos->z);
-
-	return 0;
-}*/
