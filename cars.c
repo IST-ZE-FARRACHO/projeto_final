@@ -60,7 +60,7 @@ Car * NewCar(char * id, int ta, char type, char inout, int xs, int ys, int zs)
 
 void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, LinkedList * wait_carlist, int st[], long int wt[])
 {
-	int writeOut, y, x, destinedSpot, destinedTime = (p->G->V)*3, destinedAccess, actualPos, prevPos, prevprevPos = 0, i = 0, parent, gotSpot = 0;
+	int writeOut, y, x, destinedSpot, destinedTime = (p->G->V)*3, destinedAccess, actualPos, prevPos, prevprevPos = 0, i = 0, j = 0, parent, gotSpot = 0;
 	int pX, pY, pZ, origin, totaltime, xspot, yspot;
 	char tm;
 
@@ -135,15 +135,11 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 		new->pos->y = p->G->node_info[actualPos].pos->y;
 		new->pos->z = p->G->node_info[actualPos].pos->z;
 		
-		if(i < 2)
+		if(j < 3)
 			writeOut = escreve_saida(fp, new->id, new->ta + wt[actualPos], new->pos->x, new->pos->y, new->pos->z, tm);
 		
 		else
 		{
-			new->pos->x = p->G->node_info[actualPos].pos->x;
-			new->pos->y = p->G->node_info[actualPos].pos->y;
-			new->pos->z = p->G->node_info[actualPos].pos->z;
-			
 			if(p->G->node_info[actualPos].pos->x != p->G->node_info[prevprevPos].pos->x && p->G->node_info[actualPos].pos->y != p->G->node_info[prevprevPos].pos->y){
 				writeOut = escreve_saida(fp, new->id, new->ta + wt[actualPos], new->pos->x, new->pos->y, new->pos->z, tm);
 			}
@@ -152,7 +148,7 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 		prevprevPos = prevPos;
 		prevPos = actualPos;
 		actualPos = carPathBackwards[--i];
-		i++;
+		j++;
 	}
 	printf("3");
 
