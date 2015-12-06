@@ -127,6 +127,8 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 	prevPos = origin;
 	actualPos = carPathBackwards[--i];
 	tm = 'm';
+
+	printf("1");
 	while(actualPos != destinedSpot)
 	{
 		new->pos->x = p->G->node_info[actualPos].pos->x;
@@ -141,7 +143,7 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 			new->pos->x = p->G->node_info[actualPos].pos->x;
 			new->pos->y = p->G->node_info[actualPos].pos->y;
 			new->pos->z = p->G->node_info[actualPos].pos->z;
-			printf("\n%d %d \n\n", actualPos, prevprevPos);
+			
 			if(p->G->node_info[actualPos].pos->x != p->G->node_info[prevprevPos].pos->x && p->G->node_info[actualPos].pos->y != p->G->node_info[prevprevPos].pos->y){
 				writeOut = escreve_saida(fp, new->id, new->ta + wt[actualPos], new->pos->x, new->pos->y, new->pos->z, tm);
 			}
@@ -152,6 +154,7 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 		actualPos = carPathBackwards[--i];
 		i++;
 	}
+	printf("3");
 
 	/*write parking*/
 	tm = 'e';
