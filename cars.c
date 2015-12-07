@@ -79,8 +79,12 @@ LinkedList * DeleteCarFromList(LinkedList * list, char *id, int * x, int * y, in
 
  	for(aux = list; aux != NULL; aux = aux->next) /* Searches carlist */
  	{
- 		searchcar = (Car *) getItemLinkedList(aux); /* Gets it from the abstract structure */ 	
- 			printf("%s\n", searchcar->id);
+ 		searchcar = (Car *) getItemLinkedList(aux); /* Gets it from the abstract structure */
+		(*x) = searchcar->pos->x;
+		(*y) = searchcar->pos->y;
+		(*z) = searchcar->pos->z;
+		printf("\n %d %d %d \n", *x, *y, *z);
+
 		if(strcmp(searchcar->id, id) == 0) /* If it matches the ID */
  		{
 			(*x) = searchcar->pos->x;
@@ -126,10 +130,10 @@ LinkedList * DeleteCarFromList(LinkedList * list, char *id, int * x, int * y, in
  *
  *****************************************************************************/
 
-void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, LinkedList * carlist, LinkedList * wait_carlist, int st[], long int wt[])
+void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, LinkedList ** carlist, LinkedList * wait_carlist, int st[], long int wt[])
 {
 	int writeOut, y, x, destinedSpot, destinedAccess, distance = p->G->V, actualPos, prevPos, prevprevPos, i = 0, parent, gotSpot = 0;
-	int pX, pY, pZ, origin, totaltime = new->ta, xspot, yspot, count = 0, parkedtime, totalweight;
+	int pX, pY, pZ, origin, totaltime = new->ta, xspot, yspot, parkedtime, totalweight;
 	char tm;
 
 	origin = Get_Pos(new->pos->x, new->pos->y, new->pos->z, p->N, p->M);
@@ -169,7 +173,9 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 	}
 
 	else
-	{
+	{	
+		*carlist = insertUnsortedLinkedList(*carlist, (Item) new); /*Inserts new car in given car list*/
+
 		/*get path*/
 		int carPathBackwards[wt	[destinedSpot]];
 
@@ -204,13 +210,8 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 			
 			if((new->pos->x != p->G->node_info[prevprevPos].pos->x && new->pos->y != p->G->node_info[prevprevPos].pos->y) || (new->pos->z != p->G->node_info[prevprevPos].pos->z))
 			{
-				/*if(count == 0){*/
-					writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, tm);
-					/*count = 1;
-				}*/
+				writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, tm);
 			}
-			else
-				count = 0;
 
 			prevprevPos = prevPos;
 			prevPos = actualPos;
@@ -226,13 +227,11 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 		parkedtime = totaltime;
 		totalweight = wt[actualPos];
 
-		carlist = insertUnsortedLinkedList(carlist, (Item) new); /*Inserts new car in given car list*/
+		*carlist = insertUnsortedLinkedList(*carlist, (Item) new); /*Inserts new car in given car list*/
 
 		if((pX != p->G->node_info[prevprevPos].pos->x && pY != p->G->node_info[prevprevPos].pos->y) || (pZ != p->G->node_info[prevprevPos].pos->z))
 		{
-			/*if(count == 0){*/
-				writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, 'm');
-				/*count = 1;*/
+			writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, 'm');
 		}
 		
 		writeOut = escreve_saida(fp, new->id, totaltime,pX, pY, pZ, tm);
@@ -241,7 +240,7 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 
 		GRAPHpfs(p->G, actualPos, st, wt, 1);
 	
-		i = 0, count = 0;
+		i = 0;
 		int PedPathBackwards[wt[destinedAccess]];
 		PedPathBackwards[i] = parent = destinedAccess;
 	
@@ -266,14 +265,8 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 
 			if((pX != p->G->node_info[prevprevPos].pos->x && pY != p->G->node_info[prevprevPos].pos->y) || (pZ != p->G->node_info[prevprevPos].pos->z))
 			{
-				/*if(count == 0)
-				{*/
-					writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, tm);
-					/*count = 1;
-				}*/
+				writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, tm);
 			}
-			else
-				count = 0;
 	
 			prevprevPos = prevPos;
 			prevPos = actualPos;
@@ -289,11 +282,7 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 
 		if((pX != p->G->node_info[prevprevPos].pos->x && pY != p->G->node_info[prevprevPos].pos->y) || (pZ != p->G->node_info[prevprevPos].pos->z))
 		{
-			/*if(count == 0)
-			{*/
-				writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, 'p');
-				/*count = 1;
-			}*/
+			writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, 'p');
 		}
 
 		writeOut = escreve_saida(fp, new->id, totaltime, pX, pY, pZ, tm);
@@ -343,9 +332,9 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
 			if(RestrictActivator == ACTIVE_RESTRICTS)
 				/*UpdateRestrictions(restrictionlist, p, newc, spots_matrix);*/
 
- 			WriteParkPath(output, p, newc, spots_matrix, carlist, wait_carlist, st, wt); /* Writes on the output file*/
- 		
+ 			WriteParkPath(output, p, newc, spots_matrix, &carlist, wait_carlist, st, wt); /* Writes on the output file*/
  		}
+
  		else
  		{
  			if(n > 3) /* If it is a spot liberation*/
@@ -371,10 +360,12 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
  			if(n == 3) /*Exit case - Car is in carlist, register exit time*/
  			{	
  				printf("\nSaiu um carro!\n");
+
  				DeleteCarFromList(carlist, tmpid, &xpos, &ypos, &zpos);
+ 				printf("\n %d %d %d \n", xpos, ypos, zpos);
 
  				leavePos = Get_Pos(xpos, ypos, zpos, p->N, p->M);
-
+ 
  				for(y = 0; y < p->S; y++)
 					for(x = 0; x < p->Spots; x++)
 						if(leavePos == spots_matrix[y][x].node)
@@ -394,7 +385,8 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
  				if(RestrictActivator == ACTIVE_RESTRICTS)
 					/*UpdateRestrictions(restrictionlist, p, newc, spots_matrix);*/
 
- 				WriteParkPath(output, p, newc, spots_matrix, carlist, wait_carlist, st, wt); /* Writes on the output file*/	
+ 				WriteParkPath(output, p, newc, spots_matrix, &carlist, wait_carlist, st, wt); /* Writes on the output file*/	
+
 				printf("\nLength depois de estacionar o carro da lista de espera (é suposto dar 1 na mesma): %d\n", lengthLinkedList(wait_carlist));
 
 				wait_carlist = DeleteCarFromList(wait_carlist, newc->id, &xpos, &ypos, &zpos);
