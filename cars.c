@@ -132,7 +132,8 @@ LinkedList * WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_
 	}
 
 	if(gotSpot == 0) /*if the park is totally occupied*/
-	{
+	{	
+		printf("\nVinha estacionar mas não tenho lugar, o meu gotSpot é igual a 0 :(");
 		wait_carlist = insertSortedLinkedList(wait_carlist, (Item) new, LessNumCar);
 		printf("\nInseriu um carro na lista de espera e o length da lista de espera é: %d \n", lengthLinkedList(wait_carlist));
 		return wait_carlist;
@@ -332,6 +333,7 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
  		{
  			if(n > 3) /* If it is a spot liberation*/
  			{
+ 				printf("\nLibertou-se um lugar!\n");
  				leavePos = Get_Pos(tmpxs, tmpys, tmpzs, p->N, p->M); /* Gets the leaving position */
 
  				p->G->node_info[leavePos].status = CAN_GO; /* Lifts block */
@@ -345,7 +347,8 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
  			}
  
  			if(n == 3) /*Exit case - Car is in carlist, register exit time*/
- 			{
+ 			{	
+ 				printf("\nSaiu um carro!\n");
  				DeleteCarFromList(carlist, newc, &xpos, &ypos, &zpos);
 
  				leavePos = Get_Pos(xpos, ypos, zpos, p->N, p->M);
