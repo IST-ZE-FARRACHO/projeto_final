@@ -12,17 +12,20 @@
 
 int main(int argc, char *argv[])
 {	
-	int i, n, restrictsActivator = NO_RESTRICTS;
+	int i, j, n, restrictsActivator = NO_RESTRICTS;
 
 	Park * park;
 	Parking_spot **spots_matrix;
+
+	LinkedList * aux;
 	LinkedList * carlist, * wait_carlist, * restrictionlist; /*Declares list*/
 
 	park = ReadFilePark(argv[1]); /*Reads, allocates, and fills park matrix*/
 
 	carlist = initLinkedList();
-	restrictionlist = initLinkedList();
+
 	wait_carlist = initLinkedList();
+	restrictionlist = initLinkedList();
 
 	if(argc > 3)
 	{
@@ -36,6 +39,7 @@ int main(int argc, char *argv[])
 	/*for(i = 0; i < park->G->V; i++)
 		printf("Parent: %d  Distance: %ld   Node: %d   Coord: %d %d %d\n", st[i], wt[i], i, park->G->node_info[i].pos->x, park->G->node_info[i].pos->y, park->G->node_info[i].pos->z);
 	*/
+
 	spots_matrix = CreatesSpotsTable(park);
 
 	InsertSpotMatrix(park, spots_matrix, st, wt);
@@ -51,7 +55,9 @@ int main(int argc, char *argv[])
 		printf("\n\n");
 	}*/
 
+
 	ReadMoveCars(park, argv[2], spots_matrix, carlist, wait_carlist, st, wt, restrictionlist, restrictsActivator);
+
 
 	FreePark(park);
 

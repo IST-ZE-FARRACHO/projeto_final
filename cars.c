@@ -58,7 +58,7 @@ Car * NewCar(char * id, int ta, char type, char inout, int xs, int ys, int zs)
 	return (newcar);
 }
 
-void DeleteCarFromList(LinkedList * list, Car * target, int * x, int * y, int * z)
+LinkedList * DeleteCarFromList(LinkedList * list, Car * target, int * x, int * y, int * z)
 {
 	int counter = 0;
 	Car * searchcar;
@@ -92,10 +92,12 @@ void DeleteCarFromList(LinkedList * list, Car * target, int * x, int * y, int * 
  		}
  		counter++;
  	}	
+
+ 	return list;
 }
 
 
-void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, LinkedList * carlist, LinkedList * wait_carlist, int st[], long int wt[])
+LinkedList * WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, LinkedList * carlist, LinkedList * wait_carlist, int st[], long int wt[])
 {
 	int writeOut, y, x, destinedSpot, destinedAccess, distance = p->G->V, actualPos, prevPos, prevprevPos, i = 0, j = 1, parent, gotSpot = 0;
 	int pX, pY, pZ, origin, totaltime = new->ta, xspot, yspot, count = 0, parkedtime, totalweight;
@@ -121,18 +123,22 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 						xspot = x;
 						yspot = y;
 						destinedAccess = Get_Pos(p->accesses[y].pos->x, p->accesses[y].pos->y, p->accesses[y].pos->z, p->N, p->M);
-printf("%d\n\n", destinedSpot);
+						printf("\nMeti o gotSpot a 1 depois de percorrer os lugares e verificar que existe um disponível.\n");
 						gotSpot = 1;
 					}
 				}
 			}
 		}
 	}
-	if(gotSpot == 0) /*if the park is totally occupied*/
-	{
-		wait_carlist = insertSortedLinkedList(wait_carlist, (Item) new, LessNumCar);
-	}
 
+	if(gotSpot == 0) /*if the park is totally occupied*/
+	{	
+		printf("\nVinha estacionar mas não tenho lugar, o meu gotSpot é igual a 0 :(");
+		wait_carlist = insertSortedLinkedList(wait_carlist, (Item) new, LessNumCar);
+		printf("\nInseriu um carro na lista de espera e o length da lista de espera é: %d \n", lengthLinkedList(wait_carlist));
+		return wait_carlist;
+
+	}
 	else
 	{
 		carlist = insertUnsortedLinkedList(carlist, (Item) new); /*Inserts new car in given car list*/
@@ -234,7 +240,6 @@ printf("%d\n\n", destinedSpot);
 			pX = p->G->node_info[actualPos].pos->x;
 			pY = p->G->node_info[actualPos].pos->y;
 			pZ = p->G->node_info[actualPos].pos->z;
-printf("%d %d\n\n", actualPos, destinedAccess);
 			if(j < 2)
 				writeOut = escreve_saida(fp, new->id, totaltime, pX, pY, pZ, tm);
 			
@@ -270,6 +275,8 @@ printf("%d %d\n\n", actualPos, destinedAccess);
 			writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, 'm');
 			fprintf(fp, "%s %d %d %d %d x", new->id, new->ta, parkedtime, totaltime, totalweight);
 	}
+
+	return wait_carlist;
 }
 
 
@@ -300,41 +307,47 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
 	 LinkedList * aux;
 
  	f = AbreFicheiro(file, "r"); /* Opens input file */
+
  	output = AbreFicheiro(fileNameOut, "w"); /* Opens output file */
 
  	do{	
- 		for(aux = carlist; aux != NULL; aux = aux->next){
- 			search = getItemLinkedList(aux);
- 			printf("%s  ", search->id);
- 		}
- 		printf("%d\n\n", lengthLinkedList(carlist));
  		n = fscanf(f, "%s %d %c %d %d %d", tmpid, &tmpta, &tmptype, &tmpxs, &tmpys, &tmpzs); /* Reads each line*/
+ 		
  		if( n < 3 ) continue;
 
  		if(tmptype != 'S') /*If it is not exit info (it is an entrance)*/
  		{	
 			newc = NewCar(tmpid, tmpta, tmptype, 'E', tmpxs, tmpys, tmpzs); /*Creates new car*/
 			if(RestrictActivator == ACTIVE_RESTRICTS)
-				UpdateRestrictions(restrictionlist, p, newc, spots_matrix);
- 			WriteParkPath(output, p, newc, spots_matrix, carlist, wait_carlist, st, wt); /* Writes on the output file*/
- 		}
+				/*UpdateRestrictions(restrictionlist, p, newc, spots_matrix);*/
 
+ 			wait_carlist = WriteParkPath(output, p, newc, spots_matrix, carlist, wait_carlist, st, wt); /* Writes on the output file*/
+ 		
+ 		}
  		else
  		{
  			if(n > 3) /* If it is a spot liberation*/
  			{
+ 				printf("\nLibertou-se um lugar!\n");
  				leavePos = Get_Pos(tmpxs, tmpys, tmpzs, p->N, p->M); /* Gets the leaving position */
+
  				p->G->node_info[leavePos].status = CAN_GO; /* Lifts block */
+
  				p->G->node_info[leavePos].type = EMPTY_SPOT; /* It is now an empty spot */
 
  				for(y = 0; y < p->S; y++)
 					for(x = 0; x < p->Spots; x++)
 						if(leavePos == spots_matrix[y][x].node)
+						{
 							spots_matrix[y][x].status = CAN_GO; /* Updates spots matrix */
+							printf("\nAtualizei a matriz com o lugar que se libertou!\n");
+						}
+
  			}
  
  			if(n == 3) /*Exit case - Car is in carlist, register exit time*/
- 			{
+ 			{	
+ 				printf("\nSaiu um carro!\n");
  				DeleteCarFromList(carlist, newc, &xpos, &ypos, &zpos);
 
  				leavePos = Get_Pos(xpos, ypos, zpos, p->N, p->M);
@@ -349,14 +362,19 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
  			}
 
  			if(lengthLinkedList(wait_carlist) > 0)
- 			{
+ 			{	
+
+ 				printf("\nEntrou no ciclo de estacionar o carro na lista de espera.\n");
  				newc = (Car *) getItemLinkedList(wait_carlist);
  				if(RestrictActivator == ACTIVE_RESTRICTS)
-					UpdateRestrictions(restrictionlist, p, newc, spots_matrix);
- 			
- 				DeleteCarFromList(wait_carlist, newc, &xpos, &ypos, &zpos);
+					/*UpdateRestrictions(restrictionlist, p, newc, spots_matrix);*/
 
- 				WriteParkPath(output, p, newc, spots_matrix, carlist, wait_carlist, st, wt); /* Writes on the output file*/			
+ 				wait_carlist = WriteParkPath(output, p, newc, spots_matrix, carlist, wait_carlist, st, wt); /* Writes on the output file*/	
+				printf("\nLength depois de estacionar o carro da lista de espera (é suposto dar 1 na mesma): %d\n", lengthLinkedList(wait_carlist));
+
+				wait_carlist = DeleteCarFromList(wait_carlist, newc, &xpos, &ypos, &zpos);
+				printf("\nLength depois de apagar o carro da lista de espera (é suposto dar 0): %d\n", lengthLinkedList(wait_carlist));
+ 				
  			}
 
  		}

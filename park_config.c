@@ -185,7 +185,7 @@ int Char_to_Number (char c)
  			p->G->node_info[actual_node2].status = CANT_GO;
  		}
 
- 		if(vector1[x] == EMPTY_SPOT)
+ 		if(vector1[x] == EMPTY_SPOT || vector1[x] == OCCUPIED)
  			p->Spots++;
 
  		if(vector1[x] != WALL)
@@ -370,7 +370,7 @@ Park *ReadFilePark (char * file)
 {
 	int l = 0, n, m, p, e, s;
 	long int i = 0, j = 0;
-	char line [NAME_SIZE];
+	char * line = (char*) malloc(NAME_SIZE*sizeof(char));
 
 	FILE *f;
 	Park *new_park;
@@ -389,6 +389,8 @@ Park *ReadFilePark (char * file)
 	}
 
 	FechaFicheiro(f);
+
+ 	free(line);
 
 	return new_park; /*Returns new_park*/
 }
@@ -411,6 +413,7 @@ void FreePark(Park * p)
  	free(p->accesses);
 
  	GRAPHdestroy(p->G);
+
  	free(p);
 
 }
