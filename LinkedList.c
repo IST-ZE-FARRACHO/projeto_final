@@ -1,22 +1,12 @@
-/*
- *  File name: LinkedList.c
+/******************************************************************************
  *
- *  Author: 2013 Fall Semester AED Team
+ * File Name: LinkedList.c
+ * Author:    José Correia / António Farracho
  *
- *  Release date: 2013/10/04
+ * DESCRIPTION
+ *    Creates a linked list
  *
- *  Description: C-Implementation of an Abstract Linked List
- *
- *  Implementation details:
- *    Linked list node: Each node of the list contains a pointer to
- *   the item stored in the node and a pointer to the next node. The
- *   item is specified in the file defs.h.
- *
- *  Version: 1.0
- *
- *  Change log: N/A
- *
- */
+ *****************************************************************************/
 
 
 

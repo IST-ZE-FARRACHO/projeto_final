@@ -215,6 +215,14 @@ Graph *GRAPHinit(long int V)
  	free(G);
  }
 
+ /******************************************************************************
+ * LessNumPQ()
+ *
+ * Arguments: Item a, b
+ *
+ * Description: Compares two numbers
+ *
+ *****************************************************************************/
 
 int LessNumPQ (Item a, Item b)
 {
@@ -224,6 +232,15 @@ int LessNumPQ (Item a, Item b)
   bb = (long int) b;
   return (aa < bb);
 }
+
+ /******************************************************************************
+ * PrintNumPQ()
+ *
+ * Arguments: Item hi
+ *
+ * Description: Prints a number
+ *
+ *****************************************************************************/
 
 void PrintNumPQ(Item hi)
 {
@@ -250,7 +267,7 @@ void GRAPHpfs(Graph *G, long int s, int st[], long int wt[], int passTroughSpot)
  	long int w, count = 0;
  	link * t;
  	long int v, i;
- 	double maxWT = G->V;
+ 	double maxWT = INFINITE;
 
  	Heap * queue;
 
@@ -269,9 +286,10 @@ void GRAPHpfs(Graph *G, long int s, int st[], long int wt[], int passTroughSpot)
  			v = RemoveMin(queue, wt);
  			if(wt[v] != maxWT)
  			{
- 				for(t = G->adj[v]; t != NULL; t = t->next)
+ 				for(t = G->adj[v]; t != NULL; t = t->next){
  					if(passTroughSpot == 1 && count == 0)
  					{
+
   						if(wt[w = t->v] > P  && G->node_info[v].status != CANT_GO)
  						{
  							wt[w] = P;
@@ -286,6 +304,7 @@ void GRAPHpfs(Graph *G, long int s, int st[], long int wt[], int passTroughSpot)
  						FixDownPQ(queue, w, wt);
  						st[w] = v;
  					}
+ 				}
  			}
  		}
  }

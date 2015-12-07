@@ -35,6 +35,8 @@
 #define RAMP_DOWN 7
 #define NAME_SIZE 15
 
+ #define INFINITE 32000
+
 #define NORMAL_TIME 1
 #define RAMP_TIME 2
 

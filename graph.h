@@ -21,7 +21,6 @@ Graph *GRAPHcopy(Graph *G);
 void GRAPHdestroy(Graph *G);
 
 int LessNumPQ (Item a, Item b);
-void PrintNumPQ(Item hi);
 
  void GRAPHpfs(Graph *G, long int s, int parent[], long int dist[], int);
 

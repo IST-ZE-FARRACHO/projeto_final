@@ -155,7 +155,7 @@ int Char_to_Number (char c)
 
  void Get_edges(Park *p, int vector1[], int vector2[], int nr_columns, int y1, int y2, int _floor)
  {
- 	int x, i;
+ 	int x;
  	long int actual_node1 = Get_Pos(0, y1, _floor, p->N, p->M), actual_node2 = Get_Pos(0, y2, _floor, p->N, p->M);
  	int node_above;
 
@@ -394,6 +394,17 @@ Park *ReadFilePark (char * file)
 
 	return new_park; /*Returns new_park*/
 }
+
+/******************************************************************************
+ * FreePark()
+ *
+ * Arguments: park
+ *			 
+ * Returns: --
+ *
+ * Description: Frees the memory allocated for the park
+ *
+ *****************************************************************************/
 
 void FreePark(Park * p)
 {	

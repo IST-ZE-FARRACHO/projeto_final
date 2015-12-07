@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * File Name: park_config.c
+ * File Name: tools.c
  * Author:    José Correia / António Farracho
  *
  * DESCRIPTION
@@ -58,11 +58,33 @@ LinkedList * ListCreator()
 
 }
 
+/******************************************************************************
+ * Get_Pos()
+ *
+ * Arguments: x, y, z - coordinates
+ *            nr columns, nr lines
+ *
+ * Returns: position
+ *
+ * Description: Converts coordinates into position
+ *
+ *****************************************************************************/
 
 int Get_Pos(int x, int y, int z, int columns, int lines)
 {
 	return (x + y*columns + columns*lines*z);
 }
+
+/******************************************************************************
+ * SamePos()
+ *
+ * Arguments: pos 1, pos 2
+ *
+ * Returns: True, FALSE
+ *
+ * Description: Checks if two positions are the same
+ *
+ *****************************************************************************/
 
 int SamePos(Position * pos1, Position * pos2)
 {
@@ -75,6 +97,16 @@ int SamePos(Position * pos1, Position * pos2)
     return 0;
 }
 
+/******************************************************************************
+ * exch()
+ *
+ * Arguments: int i, int j
+ *
+ * Returns: --
+ *
+ * Description: Exchanges two integers
+ *
+ *****************************************************************************/
 
 void exch(int *i, int *j)
 {
@@ -85,6 +117,60 @@ void exch(int *i, int *j)
   *j = temp;
 }
 
+/******************************************************************************
+ * LessNumRest()
+ *
+ * Arguments: Item a, b
+ *
+ * Returns: integer
+ *
+ * Description: Compares two integers from restrictions
+ *
+ *****************************************************************************/
+
+int LessNumRest(Item a, Item b) /*If a < b return 1*/
+{
+
+  Restrictions aa, bb;
+
+  aa = *( (Restrictions *) a );
+  bb = *( (Restrictions *) b );
+
+  return (aa.ta < bb.ta);
+}
+
+/******************************************************************************
+ * LessNumCar()
+ *
+ * Arguments: Item a, b
+ *
+ * Returns: integer
+ *
+ * Description: Compares two integers from car
+ *
+ *****************************************************************************/
+
+int LessNumCar(Item a, Item b) /*If a < b return 1*/
+{
+
+  Car aa, bb;
+
+  aa = *( (Car *) a );
+  bb = *( (Car *) b );
+
+  return (aa.ta < bb.ta);
+}
+
+/******************************************************************************
+ * GetOutputName()
+ *
+ * Arguments: input file name
+ *
+ * Returns: output file name
+ *
+ * Description: Obtains the output file name
+ *
+ *****************************************************************************/
 
 char * GetOutputName(char * file)
 {
@@ -226,30 +312,3 @@ int escreve_saida(FILE *fp, char *vid, int tk, int pX, int pY, int pZ, char tm)
 }
 /*end of function */
 
-
-int LessNumRest(Item a, Item b) /*If a < b return 1*/
-{
-
-  Restrictions aa, bb;
-
-  aa = *( (Restrictions *) a );
-  bb = *( (Restrictions *) b );
-
-
-
-  return (aa.ta < bb.ta);
-}
-
-
-int LessNumCar(Item a, Item b) /*If a < b return 1*/
-{
-
-  Car aa, bb;
-
-  aa = *( (Car *) a );
-  bb = *( (Car *) b );
-
-
-
-  return (aa.ta < bb.ta);
-}

@@ -12,38 +12,31 @@
 
 int main(int argc, char *argv[])
 {	
-	int i, j, n, restrictsActivator = NO_RESTRICTS;
+	int restrictsActivator = NO_RESTRICTS;
 
 	Park * park;
 	Parking_spot **spots_matrix;
 
-	LinkedList * aux;
 	LinkedList * carlist, * wait_carlist, * restrictionlist; /*Declares list*/
 
 	park = ReadFilePark(argv[1]); /*Reads, allocates, and fills park matrix*/
 
 	carlist = initLinkedList();
-
 	wait_carlist = initLinkedList();
 	restrictionlist = initLinkedList();
 
-	if(argc > 3)
+	if(argc > 3) /*if there's a restrictions file*/
 	{
 		restrictionlist = ReadRestrictsFile(argv[3], restrictionlist); /*Sends list pointer to function*/
 		restrictsActivator = ACTIVE_RESTRICTS;
 	}
 
-	int st[park->G->V];
-	long int wt[park->G->V];
+	int st[park->G->V]; /*parents vector*/
+	long int wt[park->G->V]; /*weight vector*/
 
-	/*for(i = 0; i < park->G->V; i++)
-		printf("Parent: %d  Distance: %ld   Node: %d   Coord: %d %d %d\n", st[i], wt[i], i, park->G->node_info[i].pos->x, park->G->node_info[i].pos->y, park->G->node_info[i].pos->z);
-	*/
+	spots_matrix = CreatesSpotsTable(park);  /*creates matrix*/
 
-	spots_matrix = CreatesSpotsTable(park);
-
-	InsertSpotMatrix(park, spots_matrix, st, wt);
-
+	InsertSpotMatrix(park, spots_matrix, st, wt); /*inserts each spot for each access ordered by distance*/
 	printf("\n\n");
 
 	/*for(i = 0; i < park->S; i++)
@@ -63,10 +56,9 @@ int main(int argc, char *argv[])
 
 	/*Nó 138
 		Aplicar restrições ----- QUASE CHECK CARALHOOOOO
-		SAÍDA DE CARROS  ----DEVE ESTAR TAMBÉM
-		LIsta de espera
 		FICHEIRO GRANDE DÁ SEG FAULT
 		erros na impressão
+		Carlist vazia
 		*/
 
 

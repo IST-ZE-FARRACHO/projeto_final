@@ -13,6 +13,18 @@
 
 #include "includes.h"
 
+ /******************************************************************************
+ * quicksort()
+ *
+ * Arguments: spots matrix
+ *            number of spots
+ *			 
+ * Returns: --
+ *
+ * Description: Implements the quicksort algorithm
+ *
+ *****************************************************************************/
+
 void quick_sort (Parking_spot a[], int n) 
 {
 	Parking_spot t;
@@ -35,6 +47,17 @@ void quick_sort (Parking_spot a[], int n)
     quick_sort(a, i);
     quick_sort(a + i, n - i);
 }
+
+/******************************************************************************
+ * CreatesSpotsTable()
+ *
+ * Arguments: park
+ *			 
+ * Returns: spots matrix
+ *
+ * Description: Creates the matrix for the spots
+ *
+ *****************************************************************************/
 
 Parking_spot ** CreatesSpotsTable(Park *p)
 {
@@ -62,6 +85,19 @@ Parking_spot ** CreatesSpotsTable(Park *p)
 	return spots_matrix;
 }
 
+/******************************************************************************
+ * InsertSpotsMatrix()
+ *
+ * Arguments: park
+ *            spots matrix
+ *            parents vector
+ *            weight vector
+ *			 
+ * Returns: --
+ *
+ * Description: Inserts the spots on the matrix
+ *
+ *****************************************************************************/
 
 void InsertSpotMatrix(Park *p, Parking_spot ** spots_matrix, int st[], long int wt[])
 {
