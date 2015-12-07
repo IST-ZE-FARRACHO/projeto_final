@@ -123,7 +123,7 @@ LinkedList * WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_
 						xspot = x;
 						yspot = y;
 						destinedAccess = Get_Pos(p->accesses[y].pos->x, p->accesses[y].pos->y, p->accesses[y].pos->z, p->N, p->M);
-
+						printf("\nMeti o gotSpot a 1 depois de percorrer os lugares e verificar que existe um disponível.\n");
 						gotSpot = 1;
 					}
 				}
@@ -343,7 +343,11 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
  				for(y = 0; y < p->S; y++)
 					for(x = 0; x < p->Spots; x++)
 						if(leavePos == spots_matrix[y][x].node)
+						{
 							spots_matrix[y][x].status = CAN_GO; /* Updates spots matrix */
+							printf("\nAtualizei a matriz com o lugar que se libertou!\n");
+						}
+
  			}
  
  			if(n == 3) /*Exit case - Car is in carlist, register exit time*/
