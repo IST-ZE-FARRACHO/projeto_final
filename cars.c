@@ -103,7 +103,6 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 		/*for(i = 0; i < p->G->V; i++)
 			printf("Parent: %d  Distance: %ld   Node: %d   Coord: %d %d %d\n", st[i], wt[i], i, p->G->node_info[i].pos->x, p->G->node_info[i].pos->y, p->G->node_info[i].pos->z);
 */
-
 		int carPathBackwards[wt	[destinedSpot]];
 
 		carPathBackwards[i] = parent = destinedSpot;
@@ -150,7 +149,6 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 				}
 				else
 					count = 0;
-			}
 
 			prevprevPos = prevPos;
 			prevPos = actualPos;
@@ -244,10 +242,9 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
  * Description: Reads car file and stores info into a list
  *
  *****************************************************************************/
-void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedList * carlist, LinkedList * wait_carlist, int st[], long int wt[])
+void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedList * carlist, LinkedList * wait_carlist, int st[], long int wt[], LinkedList * restrictionlist)
 {
-/*DEFINE OUTPUT FILE*/
-	/*OPEN OUTPUT FILE*/
+
 	 FILE *f; 
 	 FILE *output;
 
@@ -273,50 +270,49 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
 
   	strcat(fileNameOut, extOut);
 
- 	f = AbreFicheiro(file, "r");
- 	output = AbreFicheiro(fileNameOut, "w");
+ 	f = AbreFicheiro(file, "r"); /* Opens input file */
+ 	output = AbreFicheiro(fileNameOut, "w"); /* Opens output file */
 
  	do{	
  		
- 		n = fscanf(f, "%s   %d %c %d %d %d", tmpid, &tmpta, &tmptype, &tmpxs, &tmpys, &tmpzs); /* Reads each line*/
+ 		n = fscanf(f, "%s %d %c %d %d %d", tmpid, &tmpta, &tmptype, &tmpxs, &tmpys, &tmpzs); /* Reads each line*/
  		if( n < 3 ) continue;
 
  		if(tmptype != 'S') /*If it is not exit info (it is an entrance)*/
  		{	
 			newc = NewCar(tmpid, tmpta, tmptype, 'E', tmpxs, tmpys, tmpzs); /*Creates new car*/
-			/*Update Restrictions*/
+			UpdateRestrictions(restrictionlist, p, newc, spots_matrix);
 			carlist = insertUnsortedLinkedList(carlist, (Item) newc); /*Inserts new car in given car list*/
- 			WriteParkPath(output, p, newc, spots_matrix, wait_carlist, st, wt); /*writes on the output file*/
+ 			WriteParkPath(output, p, newc, spots_matrix, wait_carlist, st, wt); /* Writes on the output file*/
  		}
 
  		else
  		{
- 			if(n > 3)/*if a car from the begining is leaving*/
+ 			if(n > 3) /* If it is a spot liberation*/
  			{
- 				leavePos = Get_Pos(tmpxs, tmpys, tmpzs, p->N, p->M);
- 				p->G->node_info[leavePos].status = CAN_GO;
- 				p->G->node_info[leavePos].type = EMPTY_SPOT;
+ 				leavePos = Get_Pos(tmpxs, tmpys, tmpzs, p->N, p->M); /* Gets the leaving position */
+ 				p->G->node_info[leavePos].status = CAN_GO; /* Lifts block */
+ 				p->G->node_info[leavePos].type = EMPTY_SPOT; /* It is now an empty spot */
  			}
  
- 			if(n == 3) /*Exit case -> Car is in carlist, register exit time*/
+ 			if(n == 3) /*Exit case - Car is in carlist, register exit time*/
  			{	
- 				for(aux = carlist; aux->next != NULL; aux = aux->next)
+ 				for(aux = carlist; aux->next != NULL; aux = aux->next) /* Searches carlist */
  				{
- 					searchcar = (Car *) getItemLinkedList(aux);
+ 					searchcar = (Car *) getItemLinkedList(aux); /* Gets it from the abstract structure */
 
- 					if(strcmp(searchcar->id, tmpid) == 0)
+ 					if(strcmp(searchcar->id, tmpid) == 0) /* If it matches the ID */
  					{
- 						/*updates graph*/
  						leavePos = Get_Pos(searchcar->pos->x, searchcar->pos->y, searchcar->pos->z, p->N, p->M);
- 						/*updates spots_matrix*/
+ 		
  						for(y = 0; y < p->S; y++)
 						{
 							for(x = 0; x < p->Spots; x++)
 							{
 								if(leavePos == spots_matrix[y][x].node)
 								{
-									spots_matrix[y][x].status = CAN_GO;
-									p->G->node_info[leavePos].status = CAN_GO;
+									spots_matrix[y][x].status = CAN_GO; /* Updates spots matrix */
+									p->G->node_info[leavePos].status = CAN_GO; /* Updates graph info */
 								}
 
 							}

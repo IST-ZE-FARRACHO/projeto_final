@@ -74,19 +74,19 @@ LinkedList * ReadRestrictsFile(char * file, LinkedList * restrictionslist)
 	{
 		if(nr_reads == 4) /*Its a floor restriction - use type = 1*/
 		{	
-			aux = NewRestrictions(FLOOR, ta, 'E', DONTCARE, DONTCARE, ez);
-			restrictionslist = insertUnsortedLinkedList(restrictionslist, (Item) aux); /*Inserts new floor restriction in restriction list*/
-			aux = NewRestrictions(FLOOR, tb, 'S', DONTCARE, DONTCARE, ez);
-			restrictionslist = insertUnsortedLinkedList(restrictionslist, (Item) aux); /*Inserts new floor restriction in restriction list*/
+			aux = NewRestrictions(FLOOR, ta, 'E', DONTCARE, DONTCARE, ex);
+			restrictionslist = insertSortedLinkedList(restrictionslist, (Item) aux, LessNumRest);
+			aux = NewRestrictions(FLOOR, tb, 'S', DONTCARE, DONTCARE, ex);
+			restrictionslist = insertSortedLinkedList(restrictionslist, (Item) aux, LessNumRest); /*Inserts new floor restriction in restriction list*/
 
  		
 		}
 		else if(nr_reads == 6) /*Its a position restriction - use type = 0*/
 		{
 			aux = NewRestrictions(POSITION, ta, 'E', ex, ey, ez); /*Inserts restriction entrance time with ta and 'E'*/
-			restrictionslist = insertUnsortedLinkedList(restrictionslist, (Item) aux); /*Inserts new position restriction in restriction list*/
+			restrictionslist = insertSortedLinkedList(restrictionslist, (Item) aux, LessNumRest);  /*Inserts new position restriction in restriction list*/
 			aux = NewRestrictions(POSITION, tb, 'S', ex, ey, ez); /*Inserts restriction lift time with tb and 'S'*/
-			restrictionslist = insertUnsortedLinkedList(restrictionslist, (Item) aux); /*Inserts new position restriction in restriction list*/
+			restrictionslist = insertSortedLinkedList(restrictionslist, (Item) aux, LessNumRest);  /*Inserts new position restriction in restriction list*/
 
 		}
 
@@ -104,44 +104,56 @@ LinkedList * ReadRestrictsFile(char * file, LinkedList * restrictionslist)
 void UpdateRestrictions(LinkedList * restrictionslist, Park * park, Car * new, Parking_spot ** spots_matrix)
 {
 	int i, nmbr, x, y;
-	Restrictions * nextrestrict;
+	Restrictions * nextrestrict, * rest;
 	LinkedList * aux;
+	LinkedList * jarvis;
 
 	aux = restrictionslist;
 
-	while(aux->next != NULL)
+	while(aux != NULL)
 	{	
+
 		nextrestrict = (Restrictions *) getItemLinkedList(aux);
+
 
 		if(nextrestrict->ta > new->ta)
 			return;
 
-		if(nextrestrict->inout == 'E') /* New Restriction On */
-		{
-			if(nextrestrict->type == POSITIONREST) /* Position Restriction */
-			{
-				for(i = 0; i <= park->G->V; i++) /* For each one of the nodes */
-				{	
-					if( SamePos(park->G->node_info[i].pos, nextrestrict->pos) ) /* Update Graph status */
-						park->G->node_info[i].status = CANT_GO;
+		printf("\n%d %d %c %d %d %d\n", nextrestrict->type, nextrestrict->ta, nextrestrict->inout, nextrestrict->pos->x, nextrestrict->pos->y, nextrestrict->pos->z);
 
-					if( (park->G->node_info[i].type == EMPTY_SPOT) || (park->G->node_info[i].type == OCCUPIED) ) /* Update Matrix Spot status */
-					{
-						nmbr = Get_Pos(park->G->node_info[i].pos->x, park->G->node_info[i].pos->y, park->G->node_info[i].pos->z, park->N, park->M); /* Transforms coordinates into node number */
+		if(nextrestrict->inout == 'E') 
+		{	
+			if(nextrestrict->type == POSITIONREST) 
+			{	
+
+				for(i = 0; i < park->G->V; i++)
+				{	
+					if( SamePos(park->G->node_info[i].pos, nextrestrict->pos) ) 
+						{	
+							park->G->node_info[i].status = CANT_GO;
+							printf("\nBlocked a position in graph.");
 						
-						for(y = 0; y < park->S; y++) /* For each one of the matrix columns (each one of the accesses) */
+					
+					if( (park->G->node_info[i].type == EMPTY_SPOT) || (park->G->node_info[i].type == OCCUPIED) ) 
+					{
+						nmbr = Get_Pos(park->G->node_info[i].pos->x, park->G->node_info[i].pos->y, park->G->node_info[i].pos->z, park->N, park->M); 
+						
+						for(y = 0; y < park->S; y++) 
 						{	
 							for(x = 0; x < park->Spots; x++)
 							{
-								if(spots_matrix[y][x].node == nmbr) /* If it finds a Spot with the same coordinates */
-									spots_matrix[y][x].status = CANT_GO; /* Blocks it */
+								if(spots_matrix[y][x].node == nmbr)
+									{
+										spots_matrix[y][x].status = CANT_GO; 
+										printf("\nBlocked a position in spots_matrix.");
+									}
 							}
 						}
 					}
-
+				  }
 				}
 			}
-			else /* Floor Restriction */
+			else 
 			{
 				for(y = 0; y < park->S; y++)
 				{
@@ -150,39 +162,50 @@ void UpdateRestrictions(LinkedList * restrictionslist, Park * park, Car * new, P
 						if(park->G->node_info[spots_matrix[y][x].node].pos->z == nextrestrict->pos->z)
 						{
 							spots_matrix[y][x].status = CANT_GO;
+							printf("\nBlocked a floor in graph.");
 							park->G->node_info[spots_matrix[y][x].node].status = CANT_GO;
+							printf("\nBlocked a floor in spots_matrix.");
+							printf("\n%d %d", x, y);
 						}
 
 					}
 				}	
 			}
 		}
-		else /* Restriction OFF */
+		else 
 		{
-			if(nextrestrict->type == POSITIONREST) /* Position Restriction */
+			if(nextrestrict->type == POSITIONREST)
 			{
 
-				for(i = 0; i <= park->G->V; i++) /*For each one of the nodes*/
+				for(i = 0; i < park->G->V; i++) 
 				{	
 					if( SamePos(park->G->node_info[i].pos, nextrestrict->pos) )
-						park->G->node_info[i].status = CAN_GO;
-
-						if( (park->G->node_info[i].type == EMPTY_SPOT) || (park->G->node_info[i].type == OCCUPIED) ) /* Update Matrix Spot status */
-					{
-						nmbr = Get_Pos(park->G->node_info[i].pos->x, park->G->node_info[i].pos->y, park->G->node_info[i].pos->z, park->N, park->M); /* Transforms coordinates into node number */
+						{
+							park->G->node_info[i].status = CAN_GO;
+							printf("\nLifted a position restriction in graph.");
 						
-						for(y = 0; y < park->S; y++) /* For each one of the matrix columns (each one of the accesses) */
+
+
+						if( (park->G->node_info[i].type == EMPTY_SPOT) || (park->G->node_info[i].type == OCCUPIED) ) 
+					{
+						nmbr = Get_Pos(park->G->node_info[i].pos->x, park->G->node_info[i].pos->y, park->G->node_info[i].pos->z, park->N, park->M);
+						
+						for(y = 0; y < park->S; y++) 
 						{	
 							for(x = 0; x < park->Spots; x++)
 							{
-								if(spots_matrix[y][x].node == nmbr) /* If it finds a Spot with the same coordinates */
-									spots_matrix[y][x].status = CAN_GO; /* Allows it */
+								if(spots_matrix[y][x].node == nmbr) 
+									{
+										spots_matrix[y][x].status = CAN_GO; 
+										printf("\nLifted a position restriction in matrix.");
+									}
 							}
 						}
 					}
+				  }
 				}
 			}
-			else /*Floor Restriction*/
+			else 
 			{
 
 				for(y = 0; y < park->S; y++)
@@ -192,13 +215,20 @@ void UpdateRestrictions(LinkedList * restrictionslist, Park * park, Car * new, P
 						if(park->G->node_info[spots_matrix[y][x].node].pos->z == nextrestrict->pos->z)
 						{
 							spots_matrix[y][x].status = CAN_GO;
+							printf("\nLifted a floor restriction in matrix.");
 							park->G->node_info[spots_matrix[y][x].node].status = CAN_GO;
+							printf("\nLifted a floor restriction in graph.");
 						}
 
 					}
 				}
 			}
 		}
+
 		aux = aux->next;
-	}
+
+		}
+
+		printf("lol");
+
 }

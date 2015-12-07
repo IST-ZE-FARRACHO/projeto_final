@@ -31,6 +31,7 @@ int Get_Pos(int, int, int, int, int);
 int SamePos(Position * pos1, Position * pos2);
 void exch(int *i, int *j);
 int escreve_saida(FILE *fp, char *vid, int tk, int pX, int pY, int pZ, char tm);
+int LessNumRest(Item a, Item b); /*If a < b return 1*/
 
  /* End of: Protect multiple inclusions                              */
 #endif

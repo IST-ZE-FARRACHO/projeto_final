@@ -12,9 +12,12 @@
 
 int main(int argc, char *argv[])
 {	
-	int i, j;
+	int i, n;
+
 	Park * park;
 	Parking_spot **spots_matrix;
+	LinkedList * aux;
+	Restrictions * rest;
 
 	LinkedList * carlist, * wait_carlist, * restrictionlist; /*Declares list*/
 
@@ -29,6 +32,9 @@ int main(int argc, char *argv[])
 	int st[park->G->V];
 	long int wt[park->G->V];
 
+	/*for(i = 0; i < park->G->V; i++)
+		printf("Parent: %d  Distance: %ld   Node: %d   Coord: %d %d %d\n", st[i], wt[i], i, park->G->node_info[i].pos->x, park->G->node_info[i].pos->y, park->G->node_info[i].pos->z);
+	*/
 	spots_matrix = CreatesSpotsTable(park);
 
 	InsertSpotMatrix(park, spots_matrix, st, wt);
@@ -44,9 +50,9 @@ int main(int argc, char *argv[])
 		printf("\n\n");
 	}*/
 
-	/*park->G->node_info[138].pos->x = 18;
-	park->G->node_info[138].pos->y = 6;
-	park->G->node_info[138].pos->z = 0;*/
+	ReadMoveCars(park, argv[2], spots_matrix, carlist, wait_carlist, st, wt, restrictionlist);
+
+	FreePark(park);
 
 	ReadMoveCars(park, argv[2], spots_matrix, carlist, wait_carlist, st, wt);
 
@@ -57,19 +63,6 @@ int main(int argc, char *argv[])
 		SAÍDA DE CARROS  ----DEVE ESTAR TAMBÉM
 		LIsta de espera
 		FICHEIRO GRANDE DÁ SEG FAULT*/
-
-
-	/*update das restrições
-	  ler um carro
-		se for entrada, adiciona à lista de carros,
-			cria um caminho da entrada até ao spot mais perto do acesso pretendido
-				cria um caminho do spot até ao acesso
-					escreve no ficheiro de saida
-		se for saída
-			procura na lista de carros pelo carro
-				liberta a posição do carro no grafo
-					apaga o nodo da lista
-					*/
 
 		exit(0);
 }

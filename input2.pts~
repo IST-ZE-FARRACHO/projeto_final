@@ -39,3 +39,22 @@ Vze3 30 2 1 0 m
 Vze3 31 3 1 0 e
 Vze3 32 2 1 0 p
 Vze3 33 2 0 0 x
+=======
+Vbx 200 10 0 0 i
+Vbx 201 10 1 0 m
+Vbx 202 10 2 0 m
+Vbx 203 10 3 0 m
+Vbx 204 9 3 0 m
+Vbx 232 2 3 0 p
+Vbx 244 2 4 0 p
+Vbx 259 2 5 0 p
+Vbx 277 2 6 0 p
+Vbx 298 2 7 0 p
+Vbx 322 2 8 0 p
+Vbx 349 2 9 0 p
+Vbx 379 2 10 0 p
+Vbx 412 2 11 0 p
+Vbx 448 2 12 0 p
+Vbx 487 2 13 0 p
+Vbx 490 2 14 0 x
+>>>>>>> 7d9b30c5b76e9a2e682cfba991ee33fa126be1db

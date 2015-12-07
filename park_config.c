@@ -68,7 +68,7 @@ Park *NewPark(int columns, int lines, int entrances, int nr_accesses, int floors
  		}
  	}	
 
- 	p->G = GRAPHinit(columns*lines*floors);
+ 	p->G = GRAPHinit(columns*lines*floors); /* Allocates Graph structures */
 
 	p->N = columns;
 	p->M = lines;
@@ -155,7 +155,7 @@ int Char_to_Number (char c)
 
  void Get_edges(Park *p, int vector1[], int vector2[], int nr_columns, int y1, int y2, int _floor)
  {
- 	int x;
+ 	int x, i;
  	long int actual_node1 = Get_Pos(0, y1, _floor, p->N, p->M), actual_node2 = Get_Pos(0, y2, _floor, p->N, p->M);
  	int node_above;
 
@@ -196,6 +196,7 @@ int Char_to_Number (char c)
  					if(vector1[x+1] != WALL) /*if the position to the right isnt a wall, it creates an edge and inserts it in the graph*/
  					{
  						GRAPHinsertE(p->G, EDGE(actual_node1, actual_node1 + 1, NORMAL_TIME));
+
  					}
  				if(vector2[x] != WALL) /*if the position directly below isnt a wall, it searches for the respective node on the node positions vector*/
  				{ 
@@ -232,6 +233,8 @@ int Char_to_Number (char c)
  		actual_node1++;
  		actual_node2++;
  	}
+
+ 
  }
 
 
@@ -382,7 +385,7 @@ Park *ReadFilePark (char * file)
 
 	for(l = 0; l < p; l++) /*reads all the info about each floor*/
 	{
-		Read_floor(new_park, f, l, &i, &j); /*Read floor function*/
+		Read_floor(new_park, f, l, &i, &j); /*Read floor function	*/
 	}
 
 	FechaFicheiro(f);
@@ -390,20 +393,24 @@ Park *ReadFilePark (char * file)
 	return new_park; /*Returns new_park*/
 }
 
-/*int main(int argc, char *argv[])
-{
-	Park *p;
+void FreePark(Park * p)
+{	
 	int i;
 
-	p = ReadFilePark(argv[1]);
+	for(i = 0; i < p->E; i++) /* Frees structures from Entries array */
+ 	{	
+ 		free(p->entries[i].pos);
+ 	}
 
-	int st[p->G->V];
-	long int wt[p->G->V];
+ 	for(i = 0; i < p->S; i++) /* Free structures from Accesses array */
+ 	{	
+ 		free(p->accesses[i].pos);
+ 	}	
 
-	GRAPHpfs(p->G, 30, st, wt);
+	free(p->entries);
+ 	free(p->accesses);
 
-	for(i = 0; i < 600; i++)
-		printf("Parent: %d  Distance: %ld   Node: %d   Coord: %d %d %d\n", st[i], wt[i], i, p->G->node_info[i].pos->x, p->G->node_info[i].pos->y, p->G->node_info[i].pos->z);
+ 	GRAPHdestroy(p->G);
+ 	free(p);
 
-	return 0;
-}*/
+}
