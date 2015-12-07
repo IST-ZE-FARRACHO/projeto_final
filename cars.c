@@ -178,28 +178,20 @@ LinkedList * WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_
 			new->pos->y = p->G->node_info[actualPos].pos->y;
 			new->pos->z = p->G->node_info[actualPos].pos->z;
 			
-			if(j < 2)
-				writeOut = escreve_saida(fp, new->id, totaltime, new->pos->x, new->pos->y, new->pos->z, tm);
-			
-			else
+			if((new->pos->x != p->G->node_info[prevprevPos].pos->x && new->pos->y != p->G->node_info[prevprevPos].pos->y) || (new->pos->z != p->G->node_info[prevprevPos].pos->z))
 			{
-				if((new->pos->x != p->G->node_info[prevprevPos].pos->x && new->pos->y != p->G->node_info[prevprevPos].pos->y) || (new->pos->z != p->G->node_info[prevprevPos].pos->z))
-				{
-					if(count == 0){
-						writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, tm);
-						count = 1;
-					}
-					writeOut = escreve_saida(fp, new->id, totaltime, new->pos->x, new->pos->y, new->pos->z, tm);
-				}
-				else
-					count = 0;
+				/*if(count == 0){*/
+					writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, tm);
+					/*count = 1;
+				}*/
 			}
+			else
+				count = 0;
 
 			prevprevPos = prevPos;
 			prevPos = actualPos;
 			actualPos = carPathBackwards[--i];
 			totaltime++;
-			j++;
 		}
 
 		/*write parking*/
@@ -210,15 +202,20 @@ LinkedList * WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_
 		parkedtime = totaltime;
 		totalweight = wt[actualPos];
 
-		if(count == 0)
-			writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, 'm');
+		if((pX != p->G->node_info[prevprevPos].pos->x && pY != p->G->node_info[prevprevPos].pos->y) || (pZ != p->G->node_info[prevprevPos].pos->z))
+		{
+			/*if(count == 0){*/
+				writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, 'm');
+				/*count = 1;*/
+		}
+		
 		writeOut = escreve_saida(fp, new->id, totaltime,pX, pY, pZ, tm);
 
 		spots_matrix[yspot][xspot].status = CANT_GO;
 
 		GRAPHpfs(p->G, actualPos, st, wt, 1);
 	
-		i = 0, j = 0, count = 0;
+		i = 0, count = 0;
 		int PedPathBackwards[wt[destinedAccess]];
 		PedPathBackwards[i] = parent = destinedAccess;
 	
@@ -240,40 +237,41 @@ LinkedList * WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_
 			pX = p->G->node_info[actualPos].pos->x;
 			pY = p->G->node_info[actualPos].pos->y;
 			pZ = p->G->node_info[actualPos].pos->z;
-			if(j < 2)
-				writeOut = escreve_saida(fp, new->id, totaltime, pX, pY, pZ, tm);
-			
-			else
+
+			if((pX != p->G->node_info[prevprevPos].pos->x && pY != p->G->node_info[prevprevPos].pos->y) || (pZ != p->G->node_info[prevprevPos].pos->z))
 			{
-				if((pX != p->G->node_info[prevprevPos].pos->x && pY != p->G->node_info[prevprevPos].pos->y) || (pZ != p->G->node_info[prevprevPos].pos->z))
-				{
-					if(count == 0)
-					{
-						writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, tm);
-						count = 1;
-					}
-					writeOut = escreve_saida(fp, new->id, totaltime, new->pos->x, new->pos->y, new->pos->z, tm);
-				}
-				else
-					count = 0;
+				/*if(count == 0)
+				{*/
+					writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, tm);
+					/*count = 1;
+				}*/
 			}
+			else
+				count = 0;
 	
 			prevprevPos = prevPos;
 			prevPos = actualPos;
 			actualPos = PedPathBackwards[--i];
 			totaltime++;
-			j++;
 		}
 	
-		tm = 'x';
+		tm = 'a';
 		pX = p->G->node_info[actualPos].pos->x;
 		pY = p->G->node_info[actualPos].pos->y;
 		pZ = p->G->node_info[actualPos].pos->z;
-		totalweight += wt[actualPos];
+		totalweight += 3*wt[actualPos];
 
-		if(count == 0)
-			writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, 'm');
-			fprintf(fp, "%s %d %d %d %d x", new->id, new->ta, parkedtime, totaltime, totalweight);
+		if((pX != p->G->node_info[prevprevPos].pos->x && pY != p->G->node_info[prevprevPos].pos->y) || (pZ != p->G->node_info[prevprevPos].pos->z))
+		{
+			/*if(count == 0)
+			{*/
+				writeOut = escreve_saida(fp, new->id, totaltime - 1,  p->G->node_info[prevPos].pos->x,  p->G->node_info[prevPos].pos->y,  p->G->node_info[prevPos].pos->z, 'p');
+				/*count = 1;
+			}*/
+		}
+
+		writeOut = escreve_saida(fp, new->id, totaltime, pX, pY, pZ, tm);
+		fprintf(fp, "%s %d %d %d %d x", new->id, new->ta, parkedtime, totaltime, totalweight);
 	}
 
 	return wait_carlist;
@@ -342,6 +340,7 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
 							spots_matrix[y][x].status = CAN_GO; /* Updates spots matrix */
 							printf("\nAtualizei a matriz com o lugar que se libertou!\n");
 						}
+				fprintf(output,"\n%s %d %d %d %d s", tmpid, tmpta, tmpxs, tmpys, tmpzs);
 
  			}
  
@@ -359,6 +358,8 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
 							spots_matrix[y][x].status = CAN_GO; /* Updates spots matrix */
 							p->G->node_info[leavePos].status = CAN_GO; /* Updates graph info */
 						}
+
+				fprintf(output,"\n%s %d %d %d %d s", tmpid, tmpta, xpos, ypos, zpos);
  			}
 
  			if(lengthLinkedList(wait_carlist) > 0)
