@@ -23,6 +23,8 @@
 #include "heap.h"
 #include "spots.h"
 
+#define NO_RESTRICTS 0
+#define ACTIVE_RESTRICTS 1
 #define ROAD 0
 #define WALL 1
 #define ENTRY_DOOR 2

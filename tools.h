@@ -30,8 +30,10 @@ LinkedList * ListCreator();
 int Get_Pos(int, int, int, int, int);
 int SamePos(Position * pos1, Position * pos2);
 void exch(int *i, int *j);
+char * GetOutputName(char * file);
 int escreve_saida(FILE *fp, char *vid, int tk, int pX, int pY, int pZ, char tm);
 int LessNumRest(Item a, Item b); /*If a < b return 1*/
+int LessNumCar(Item a, Item b);
 
  /* End of: Protect multiple inclusions                              */
 #endif

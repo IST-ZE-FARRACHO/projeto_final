@@ -104,9 +104,8 @@ LinkedList * ReadRestrictsFile(char * file, LinkedList * restrictionslist)
 void UpdateRestrictions(LinkedList * restrictionslist, Park * park, Car * new, Parking_spot ** spots_matrix)
 {
 	int i, nmbr, x, y;
-	Restrictions * nextrestrict, * rest;
+	Restrictions * nextrestrict;
 	LinkedList * aux;
-	LinkedList * jarvis;
 
 	aux = restrictionslist;
 

@@ -8,7 +8,7 @@ CFLAGS= -Wall -ansi -O3
 LIBS= -lm
 
 SRCFILES= main.c cars.c graph.c heap.c LinkedList.c park_config.c restrictions.c spots.c tools.c
-INCFILES= defs.h cars.h graph.h heap.h LinkedList.h park_config.h restrictions.h spots.h tools.h
+INCFILES= defs.h includes.h cars.h graph.h heap.h LinkedList.h park_config.h restrictions.h spots.h tools.h
 OBJFILES= main.o cars.o graph.o heap.o LinkedList.o park_config.o restrictions.o spots.o tools.o
 
 default: $(TARGET)
@@ -19,22 +19,22 @@ $(TARGET): $(OBJFILES)
 clean:
 	rm -f $(TARGET) $(OBJFILES) core.* #*
 
-main.o: main.c defs.h tools.h cars.h restrictions.h LinkedList.h park_config.h heap.h spots.h
+main.o: main.c includes.h
 
-cars.o: cars.c cars.h
+cars.o: cars.c includes.h
 
-graph.o: graph.c graph.h
+graph.o: graph.c includes.h
 
-heap.o: heap.c heap.h
+heap.o: heap.c includes.h
 
-LinkedList.o: LinkedList.c LinkedList.h
+LinkedList.o: LinkedList.c includes.h
 
-park_config.o: park_config.c park_config.h
+park_config.o: park_config.c includes.h
 
-restrictions.o: restrictions.c restrictions.h
+restrictions.o: restrictions.c includes.h
 
-spots.o: spots.c spots.h
+spots.o: spots.c includes.h
 
-tools.o: tools.c tools.h
+tools.o: tools.c includes.h
 
 

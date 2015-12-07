@@ -12,22 +12,23 @@
 
 int main(int argc, char *argv[])
 {	
-	int i, n;
+	int i, n, restrictsActivator = NO_RESTRICTS;
 
 	Park * park;
 	Parking_spot **spots_matrix;
-	LinkedList * aux;
-	Restrictions * rest;
-
 	LinkedList * carlist, * wait_carlist, * restrictionlist; /*Declares list*/
 
 	park = ReadFilePark(argv[1]); /*Reads, allocates, and fills park matrix*/
 
 	carlist = initLinkedList();
-	wait_carlist = initLinkedList();
 	restrictionlist = initLinkedList();
+	wait_carlist = initLinkedList();
 
-	restrictionlist = ReadRestrictsFile(argv[3], restrictionlist); /*Sends list pointer to function*/
+	if(argc > 3)
+	{
+		restrictionlist = ReadRestrictsFile(argv[3], restrictionlist); /*Sends list pointer to function*/
+		restrictsActivator = ACTIVE_RESTRICTS;
+	}
 
 	int st[park->G->V];
 	long int wt[park->G->V];
@@ -50,19 +51,18 @@ int main(int argc, char *argv[])
 		printf("\n\n");
 	}*/
 
-	ReadMoveCars(park, argv[2], spots_matrix, carlist, wait_carlist, st, wt, restrictionlist);
+	ReadMoveCars(park, argv[2], spots_matrix, carlist, wait_carlist, st, wt, restrictionlist, restrictsActivator);
 
 	FreePark(park);
 
-	ReadMoveCars(park, argv[2], spots_matrix, carlist, wait_carlist, st, wt);
-
-	/*Mudanças de direção
-		Nó 138
-		Estacionamentos mal
+	/*Nó 138
 		Aplicar restrições ----- QUASE CHECK CARALHOOOOO
 		SAÍDA DE CARROS  ----DEVE ESTAR TAMBÉM
 		LIsta de espera
-		FICHEIRO GRANDE DÁ SEG FAULT*/
+		FICHEIRO GRANDE DÁ SEG FAULT
+		erros na impressão
+		*/
+
 
 		exit(0);
 }

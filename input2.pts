@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Vbx 0 10 0 0 i
 Vbx 1 10 1 0 m
 Vbx 3 10 3 0 m
@@ -12,8 +11,7 @@ Vbx 15 2 7 0 m
 Vbx 21 2 13 0 m
 Vbx 22 1 13 0 e
 Vbx 23 2 13 0 p
-Vbx 24 2 14 0 x
-VTE1 3 10 0 0 i
+Vbx 0 22 24 24 xVTE1 3 10 0 0 i
 VTE1 4 10 1 0 m
 VTE1 6 10 3 0 m
 VTE1 7 9 3 0 m
@@ -28,14 +26,6 @@ VTE1 25 3 13 0 e
 VTE1 26 3 12 0 p
 VTE1 27 2 12 0 p
 VTE1 28 2 13 0 p
-VTE1 29 2 14 0 x
-Vze3 7 19 7 0 i
+VTE1 3 25 29 26 xVze3 7 19 7 0 i
 Vze3 8 18 7 0 m
-Vze3 9 18 6 0 m
-Vze3 10 17 6 0 m
-Vze3 25 2 6 0 m
-Vze3 26 2 5 0 m
-Vze3 30 2 1 0 m
-Vze3 31 3 1 0 e
-Vze3 32 2 1 0 p
-Vze3 33 2 0 0 x
+Vze3 7 31 33 26 x
