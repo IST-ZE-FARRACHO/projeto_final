@@ -12,6 +12,7 @@
 
 int main(int argc, char *argv[])
 {	
+	int i, j;
 	Park * park;
 	Parking_spot **spots_matrix;
 
@@ -38,13 +39,16 @@ int main(int argc, char *argv[])
 	{
 		for(j = 0; j < park->Spots; j++)
 		{
-			printf("%d  ", spots_matrix[i][j].node);
+			printf("%ld  ", spots_matrix[i][j].node);
 		}
 		printf("\n\n");
 	}*/
 
-	ReadMoveCars(park, argv[2], spots_matrix, carlist, wait_carlist, st, wt);
+	/*park->G->node_info[138].pos->x = 18;
+	park->G->node_info[138].pos->y = 6;
+	park->G->node_info[138].pos->z = 0;*/
 
+	ReadMoveCars(park, argv[2], spots_matrix, carlist, wait_carlist, st, wt);
 
 	/*Mudanças de direção
 		Nó 138

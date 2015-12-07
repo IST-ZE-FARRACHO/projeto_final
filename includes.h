@@ -31,7 +31,7 @@
 #define OCCUPIED 5
 #define RAMP_UP 6
 #define RAMP_DOWN 7
-#define NAME_SIZE 4
+#define NAME_SIZE 15
 
 #define NORMAL_TIME 1
 #define RAMP_TIME 2
