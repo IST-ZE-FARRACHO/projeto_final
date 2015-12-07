@@ -174,7 +174,10 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 
 	else
 	{	
+		printf("\nTem lugar, vou inseri-lo na carlist\n");
+		printf("\nLenght carlist antes: %d\n", lengthLinkedList(*carlist));
 		*carlist = insertUnsortedLinkedList(*carlist, (Item) new); /*Inserts new car in given car list*/
+		printf("\nLenght carlist depois: %d\n", lengthLinkedList(*carlist));
 
 		/*get path*/
 		int carPathBackwards[wt	[destinedSpot]];
@@ -323,7 +326,7 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
 
  	do{	
  		n = fscanf(f, "%s %d %c %d %d %d", tmpid, &tmpta, &tmptype, &tmpxs, &tmpys, &tmpzs); /* Reads each line*/
- 		printf("%d\n", lengthLinkedList(carlist));
+
  		if( n < 3 ) continue;
 
  		if(tmptype != 'S') /*If it is not exit info (it is an entrance)*/
@@ -331,7 +334,7 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
 			newc = NewCar(tmpid, tmpta, tmptype, 'E', tmpxs, tmpys, tmpzs); /*Creates new car*/
 			if(RestrictActivator == ACTIVE_RESTRICTS)
 				/*UpdateRestrictions(restrictionlist, p, newc, spots_matrix);*/
-
+			printf("\nNovo carro!\n");
  			WriteParkPath(output, p, newc, spots_matrix, &carlist, wait_carlist, st, wt); /* Writes on the output file*/
  		}
 
