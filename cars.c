@@ -296,13 +296,18 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
 	 char tmptype;
 	 char tmpid[5];
 	 char * fileNameOut = GetOutputName(file);
-	 Car * newc;
+	 Car * newc, * search;
+	 LinkedList * aux;
 
  	f = AbreFicheiro(file, "r"); /* Opens input file */
  	output = AbreFicheiro(fileNameOut, "w"); /* Opens output file */
 
  	do{	
- 		printf("%d\n\n", lengthLinkedList(wait_carlist));
+ 		for(aux = carlist; aux != NULL; aux = aux->next){
+ 			search = getItemLinkedList(aux);
+ 			printf("%s  ", search->id);
+ 		}
+ 		printf("%d\n\n", lengthLinkedList(carlist));
  		n = fscanf(f, "%s %d %c %d %d %d", tmpid, &tmpta, &tmptype, &tmpxs, &tmpys, &tmpzs); /* Reads each line*/
  		if( n < 3 ) continue;
 
@@ -321,7 +326,7 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
  				leavePos = Get_Pos(tmpxs, tmpys, tmpzs, p->N, p->M); /* Gets the leaving position */
  				p->G->node_info[leavePos].status = CAN_GO; /* Lifts block */
  				p->G->node_info[leavePos].type = EMPTY_SPOT; /* It is now an empty spot */
- 		printf("%d\n\n", leavePos);
+
  				for(y = 0; y < p->S; y++)
 					for(x = 0; x < p->Spots; x++)
 						if(leavePos == spots_matrix[y][x].node)
