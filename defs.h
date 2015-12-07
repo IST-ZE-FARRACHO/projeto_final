@@ -10,7 +10,7 @@
  #ifndef defs_H
  #define defs_H
 
- #define NAME_SIZE 4
+#define NAME_SIZE 15
 
 typedef void * Item;
 

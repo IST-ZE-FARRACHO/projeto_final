@@ -23,6 +23,8 @@
 #include "heap.h"
 #include "spots.h"
 
+#define NO_RESTRICTS 0
+#define ACTIVE_RESTRICTS 1
 #define ROAD 0
 #define WALL 1
 #define ENTRY_DOOR 2
@@ -31,7 +33,7 @@
 #define OCCUPIED 5
 #define RAMP_UP 6
 #define RAMP_DOWN 7
-#define NAME_SIZE 4
+#define NAME_SIZE 15
 
 #define NORMAL_TIME 1
 #define RAMP_TIME 2

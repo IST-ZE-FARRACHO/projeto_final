@@ -107,13 +107,14 @@ int lengthLinkedList(LinkedList * first)
 {
 
   int counter = 0;
+  LinkedList * aux = first;
 
   /* Length determination cycle                                   */
-  while(first != NULL)
+  while(aux != NULL)
   {
 
     counter++;
-    first=first->next;
+    aux=aux->next;
 
   }
 
@@ -254,9 +255,8 @@ LinkedList * insertSortedLinkedList(LinkedList * first, Item item, int (* compar
  {
 
   LinkedList * new;
-  LinkedList * aux;
-  LinkedList * tmp;
-  aux = first;
+  LinkedList * aux = first;
+  LinkedList * tmp = first;
 
   /* Memory allocation                                            */
   new = (LinkedList *) malloc(sizeof(LinkedList));

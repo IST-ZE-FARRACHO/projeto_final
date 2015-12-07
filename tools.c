@@ -86,6 +86,27 @@ void exch(int *i, int *j)
 }
 
 
+char * GetOutputName(char * file)
+{
+  char * extOut = ".pts";
+  char * fileNameOut;
+  fileNameOut = (char *) malloc(sizeof(char) * (strlen(file) + 1));
+
+  strcpy(fileNameOut, file);
+    
+  if(fileNameOut == NULL)
+  {
+    printf("Memory allocation error for fileNameOut.\n");
+    exit(1); 
+  }
+
+    fileNameOut[strlen(file) - 4] = '\0';
+
+    strcat(fileNameOut, extOut);
+
+  return fileNameOut;
+}
+
 /******************************************************************************
  * escreve_saida ()
  *
@@ -213,6 +234,20 @@ int LessNumRest(Item a, Item b) /*If a < b return 1*/
 
   aa = *( (Restrictions *) a );
   bb = *( (Restrictions *) b );
+
+
+
+  return (aa.ta < bb.ta);
+}
+
+
+int LessNumCar(Item a, Item b) /*If a < b return 1*/
+{
+
+  Car aa, bb;
+
+  aa = *( (Car *) a );
+  bb = *( (Car *) b );
 
 
 
