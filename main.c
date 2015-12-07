@@ -22,36 +22,23 @@ int main(int argc, char *argv[])
 
 	park = ReadFilePark(argv[1]); /*Reads, allocates, and fills park matrix*/
 
-
-
-	carlist = initLinkedList();
+	/*carlist = initLinkedList();
 	wait_carlist = initLinkedList();
 	restrictionlist = initLinkedList();
 
 	restrictionlist = ReadRestrictsFile(argv[3], restrictionlist); /*Sends list pointer to function*/
 
-	aux = restrictionlist;
-	
-	while(aux != NULL)
-	{	
-		
-		rest = (Restrictions *) getItemLinkedList(aux);
-		printf("\n%d\n", rest->ta);
-		aux = aux->next;
-
-	}
-
-	int st[park->G->V];
-	long int wt[park->G->V];
+	/*int st[park->G->V];
+	long int wt[park->G->V];*/
 
 	/*for(i = 0; i < park->G->V; i++)
 		printf("Parent: %d  Distance: %ld   Node: %d   Coord: %d %d %d\n", st[i], wt[i], i, park->G->node_info[i].pos->x, park->G->node_info[i].pos->y, park->G->node_info[i].pos->z);
 	*/
-	spots_matrix = CreatesSpotsTable(park);
+	/*spots_matrix = CreatesSpotsTable(park);
 
 	InsertSpotMatrix(park, spots_matrix, st, wt);
 
-	printf("\n\n");
+	printf("\n\n");*/
 
 	/*for(i = 0; i < park->S; i++)
 	{
@@ -62,7 +49,9 @@ int main(int argc, char *argv[])
 		printf("\n\n");
 	}*/
 
-	ReadMoveCars(park, argv[2], spots_matrix, carlist, wait_carlist, st, wt, restrictionlist);
+	/*ReadMoveCars(park, argv[2], spots_matrix, carlist, wait_carlist, st, wt, restrictionlist);*/
+
+	FreePark(park);
 
 
 	/*Mudanças de direção
@@ -72,19 +61,6 @@ int main(int argc, char *argv[])
 		SAÍDA DE CARROS  ----DEVE ESTAR TAMBÉM
 		LIsta de espera
 		FICHEIRO GRANDE DÁ SEG FAULT*/
-
-
-	/*update das restrições
-	  ler um carro
-		se for entrada, adiciona à lista de carros,
-			cria um caminho da entrada até ao spot mais perto do acesso pretendido
-				cria um caminho do spot até ao acesso
-					escreve no ficheiro de saida
-		se for saída
-			procura na lista de carros pelo carro
-				liberta a posição do carro no grafo
-					apaga o nodo da lista
-					*/
 
 		exit(0);
 }
