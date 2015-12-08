@@ -130,7 +130,9 @@ LinkedList * DeleteCarFromList(LinkedList * list, char *id, int * x, int * y, in
 
 void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, LinkedList ** carlist, LinkedList * wait_carlist, int st[], long int wt[])
 {
+
 	int writeOut, y, x, destinedSpot = 0, destinedAccess = 0, distance = INFINITE, actualPos, prevPos, prevprevPos, i = 0, parent, gotSpot = 0;
+
 	int pX, pY, pZ, origin, totaltime = new->ta, xspot = 0, yspot = 0, parkedtime, totalweight;
 	char tm;
 
@@ -155,7 +157,9 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 						xspot = x;
 						yspot = y;
 						destinedAccess = Get_Pos(p->accesses[y].pos->x, p->accesses[y].pos->y, p->accesses[y].pos->z, p->N, p->M);
+
 						printf("\n %d %d %d \n", p->accesses[y].pos->x, p->accesses[y].pos->y, p->accesses[y].pos->z);
+
 						gotSpot = 1;
 					}
 				}
@@ -170,7 +174,7 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 	}
 
 	else
-	{			
+	{	
 
 		/*get path*/
 		int carPathBackwards[wt[destinedSpot]];
