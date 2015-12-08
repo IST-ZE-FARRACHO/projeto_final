@@ -155,8 +155,6 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 						yspot = y;
 						destinedAccess = Get_Pos(p->accesses[y].pos->x, p->accesses[y].pos->y, p->accesses[y].pos->z, p->N, p->M);
 
-						printf("\n %d %d %d \n", p->accesses[y].pos->x, p->accesses[y].pos->y, p->accesses[y].pos->z);
-
 						gotSpot = 1;
 					}
 				}
@@ -197,9 +195,7 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 		totaltime++;
 		prevPos = prevprevPos = origin;
 
-		printf("\n \n actualpos: %d %d %d \n \n", p->G->node_info[actualPos].pos->x,  p->G->node_info[actualPos].pos->y,  p->G->node_info[actualPos].pos->z);
 		actualPos = carPathBackwards[--i];
-		printf("\n \n actualpos: %d %d %d \n \n", p->G->node_info[actualPos].pos->x,  p->G->node_info[actualPos].pos->y,  p->G->node_info[actualPos].pos->z);
 
 		tm = 'm';
 
@@ -217,8 +213,6 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 			prevprevPos = prevPos;
 			prevPos = actualPos;
 			actualPos = carPathBackwards[--i];
-
-			printf("\n \n actualpos: %d %d %d \n \n", p->G->node_info[actualPos].pos->x,  p->G->node_info[actualPos].pos->y,  p->G->node_info[actualPos].pos->z);
 
 			totaltime++;
 		}
@@ -245,18 +239,6 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 		GRAPHpfs(p->G, actualPos, st, wt, 1);
 
 
-
-
-		printf("\n \n teste: %d %d %d \n \n", p->G->node_info[actualPos].pos->x,  p->G->node_info[actualPos].pos->y,  p->G->node_info[actualPos].pos->z);
-
-
-		GRAPHpfs(p->G, actualPos, st, wt, 1);
-
-		for(i = 0; i < p->G->V; i++)
-		printf("Parent: %d  Distance: %ld   Node: %d   Coord: %d %d %d\n", st[i], wt[i], i, p->G->node_info[i].pos->x, p->G->node_info[i].pos->y, p->G->node_info[i].pos->z);
-		
-		printf("\n %ld %ld\n", wt[76], wt[68]);
-
 		i = 0;
 		int PedPathBackwards[wt[destinedAccess]];
 		PedPathBackwards[i] = parent = destinedAccess;
@@ -271,8 +253,6 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 
 		prevPos = prevprevPos = destinedSpot;
 		actualPos = PedPathBackwards[--i];
-
-		printf("\n \n actualpos: %d %d %d \n \n", p->G->node_info[actualPos].pos->x,  p->G->node_info[actualPos].pos->y,  p->G->node_info[actualPos].pos->z);
 
 		tm = 'p';
 		totaltime++;
@@ -291,8 +271,6 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 			prevprevPos = prevPos;
 			prevPos = actualPos;
 			actualPos = PedPathBackwards[--i];
-
-			printf("\n \n actualpos: %d %d %d \n \n", p->G->node_info[actualPos].pos->x,  p->G->node_info[actualPos].pos->y,  p->G->node_info[actualPos].pos->z);
 
 			totaltime++;
 		}
@@ -362,7 +340,7 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
 			if(RestrictActivator == ACTIVE_RESTRICTS)
 				UpdateRestrictions(restrictionlist, p, newc, spots_matrix);
 
- 			WriteParkPath(output, p, newc, spots_matrix, &carlist, wait_carlist, st, wt); /* Writes on the output file*/
+ 			WriteParkPath(output, p, newc, spots_matrix, &carlist, wait_carlist, st, wt, timeWaitList); /* Writes on the output file*/
  		}
 
  		else

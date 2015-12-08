@@ -241,7 +241,8 @@ int LessNumPQ (Item a, Item b)
 
 void GRAPHpfs(Graph *G, long int s, int st[], long int wt[], int passTroughSpot)
  {
- 	long int w, count = 0;
+ 	long int w, count = 0, min = INFINITE;
+ 	int adj = 0;
  	link * t;
  	long int v, i;
  	double maxWT = INFINITE;
@@ -259,16 +260,23 @@ void GRAPHpfs(Graph *G, long int s, int st[], long int wt[], int passTroughSpot)
 
  	wt[s] = 0.0;
  	FixDownPQ(queue, s, wt);
- 	
+
+ 	if(passTroughSpot == 1)
+ 		for(t = G->adj[s]; t != NULL; t = t->next) /*counts the adjacents of the spot*/
+ 			adj++;
+
  	for(i = 0; i < G->V; i++)
  		while(HeapEmpty(queue) != 1){
  			v = RemoveMin(queue, wt);
+
+ 			if(v <= min)
+ 				min = v;
+
  			if(wt[v] != maxWT)
  			{
  				for(t = G->adj[v]; t != NULL; t = t->next){
- 					if(passTroughSpot == 1 && count == 0)
+ 					if(passTroughSpot == 1 && count < adj)
  					{
-
   						if(wt[w = t->v])
  						{
  							wt[w] = P;
