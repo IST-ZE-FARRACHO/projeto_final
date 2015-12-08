@@ -32,7 +32,6 @@ Park *NewPark(int columns, int lines, int entrances, int nr_accesses, int floors
 
 	if (p == (NULL))
 	{
-		fprintf(stderr, "Error in malloc of park.\n");
 		exit(0);
 	}
 
@@ -42,7 +41,6 @@ Park *NewPark(int columns, int lines, int entrances, int nr_accesses, int floors
 
  	if(p->entries == NULL || p->accesses == NULL)
  	{
- 		fprintf(stderr, "Error in malloc of entries/accesses.\n");
  		exit(0);
  	}
 
@@ -52,7 +50,6 @@ Park *NewPark(int columns, int lines, int entrances, int nr_accesses, int floors
  		
  		if(p->entries[i].pos == NULL)
  		{
- 			fprintf(stderr, "Error in malloc of entries/accesses.\n");
  			exit(0);
  		}
  	}
@@ -63,7 +60,6 @@ Park *NewPark(int columns, int lines, int entrances, int nr_accesses, int floors
  		
  		if(p->accesses[i].pos == NULL)
  		{
- 			fprintf(stderr, "Error in malloc of entries/accesses.\n");
  			exit(0);
  		}
  	}	
@@ -134,8 +130,7 @@ int Char_to_Number (char c)
 
 	else
 	{
-		printf("\nMap file is poorly built!\n");
-		exit(1);
+		exit(0);
 	}
 }
 
@@ -233,8 +228,6 @@ int Char_to_Number (char c)
  		actual_node1++;
  		actual_node2++;
  	}
-
- 
  }
 
 
@@ -256,8 +249,6 @@ void Map_to_Park_Graph (Park * p, FILE * f, int _floor)
 	char vector2[p->N]; /*Line storage vector*/
 	int vector1_nr[p->N], vector2_nr[p->N];
 
-	printf("\nFloor number: %d\n", _floor);
-
 	if(fgets(vector2, (p->N+1)*(p->M), f) != NULL); 
 	
 	for(y = p->M-1; y > 0; y--) /*For each one of the lines*/
@@ -265,20 +256,15 @@ void Map_to_Park_Graph (Park * p, FILE * f, int _floor)
 		for (x = 0; x < p->N; x++) /*For each one of the characters*/
 		{
 			vector1_nr[x] = Char_to_Number(vector2[x]); /*Converts the symbol into integer and fills the numbers vector*/
-			printf("%d", vector1_nr[x]); /*prints the type of the position on the screen*/
 		}
-		printf("\n");
 
 		if(fgets(vector2, (p->N+1)*(p->M), f) != NULL);
 
 		for(x = 0; x < p->N; x++){
 			vector2_nr[x] = Char_to_Number(vector2[x]);
-			if(y == 1)
-				printf("%d", vector2_nr[x]);
 		}
 		Get_edges(p, vector1_nr, vector2_nr, p->N, y, y-1, _floor); /*Get edges of the graph*/
 	}
-	printf("\n\n");
 }
 
 /******************************************************************************
@@ -307,7 +293,7 @@ void Read_Doors_info (Park * p, FILE * f, long int *i, long int *j) /*i, j, decl
 			p->entries[(*i)].pos->x = door_x;
 			p->entries[(*i)].pos->y = door_y;
 			p->entries[(*i)].pos->z = door_z;
-			printf("Entrance: %s (%d,%d,%d)\n", p->entries[(*i)].name, p->entries[(*i)].pos->x, p->entries[(*i)].pos->y, p->entries[(*i)].pos->z);
+
 			(*i)++;
 		}
 
@@ -318,7 +304,7 @@ void Read_Doors_info (Park * p, FILE * f, long int *i, long int *j) /*i, j, decl
 			p->accesses[(*j)].pos->y = door_y;
 			p->accesses[(*j)].pos->z = door_z;
 			p->accesses[(*j)].type = door_type;
-			printf("Access: %s (%d,%d,%d)\n", p->accesses[(*j)].name,  p->accesses[(*j)].pos->x,  p->accesses[(*j)].pos->y,  p->accesses[(*j)].pos->z);
+
 			(*j)++;
 		}
 
@@ -329,7 +315,7 @@ void Read_Doors_info (Park * p, FILE * f, long int *i, long int *j) /*i, j, decl
 
 		else
 		{
-			printf("Invalid door information in park file!\n");
+			exit(0);
 		}
 		doors++;
 	}

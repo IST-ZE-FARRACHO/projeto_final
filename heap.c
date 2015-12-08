@@ -19,55 +19,7 @@
  *
  *****************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
-#include "heap.h"
-
-/* to remove comments, just delete or comment the next line */
-#define DEMO
-
-/******************************************************************************
- * PrintHeap()
- *
- * Arguments: h - pointer to heap structure
- * Returns: void
- * Side-Effects: none
- *
- * Description: auxiliary function to print heap content
- *
- *****************************************************************************/
-
-int PrintHeap(Heap * h)
-{
-    int i;
-    
-    if (h->n_elements == 0) {
-        printf("Heap empty.\n");
-        return 0;
-    }
-    printf("\n");
-    for (i = 0; i < h->n_elements; i++)
-        printf("+-----");
-    printf("+\n");
-    for (i = 0; i < h->n_elements; i++)
-        printf("| %3d ", i);
-    printf("|\n");
-    for (i = 0; i < h->n_elements; i++)
-        printf("+-----");
-    printf("+\n");
-    for (i = 0; i < h->n_elements; i++) {
-        printf("| ");
-        h->print(h->heapdata[i]);
-        printf(" ");
-    }
-    printf("|\n");
-    for (i = 0; i < h->n_elements; i++)
-        printf("+-----");
-    printf("+\n");
-    
-    return h->n_elements;
-}
-
+#include "includes.h"
 
 /******************************************************************************
  * FixUp()
@@ -86,11 +38,6 @@ void FixUp(Heap * h, int k)
   Item t;
   while ((k > 0) && (h->less) ((h->heapdata)[(k - 1) / 2], (h->heapdata)[k])) {
 #ifdef DEMO
-    /* --------------------------------------------------- */
-   /* printf("FixUp: heap[%d]: %d is smaller than offspring heap[%d]: %d\n",
-           (k - 1) / 2, *((int *) (h->heapdata)[(k - 1) / 2]),
-           k, *((int *) (h->heapdata)[k]));
-    printf("\t=> exchange\n");*/
 #endif
     /*---------------------------------------------------------*/
     t = (h->heapdata)[k];
@@ -98,9 +45,6 @@ void FixUp(Heap * h, int k)
     (h->heapdata)[(k - 1) / 2] = t;
 
 #ifdef DEMO
-    /* --------------------------------------------------- */
-   /* printf("\t=> \n");
-    PrintHeap(h);*/
 #endif
     /*---------------------------------------------------------*/
     k = (k - 1) / 2;
@@ -143,35 +87,18 @@ void FixDown(Heap * h, int k)
       /* Elements are in correct order. */
 
 #ifdef DEMO
-      /* --------------------------------------------------- */
-     /* printf
-          ("FixDown: Compare heap[%d]: %d with heap[%d]: %d => don't exchange\n",
-           k, *((int *) h->heapdata[k]), j, *((int *) h->heapdata[j]));*/
 #endif
-      /*---------------------------------------------------------*/
       break;
     }
 #ifdef DEMO
-    /* --------------------------------------------------- */
-    /*printf("FixDown: heap[%d]: %d is smaller than offspring heap[%d]: %d\n",
-           k, *((int *) (h->heapdata)[k]), j, *((int *) (h->heapdata)[j]));
-    printf("\t=> exchange\n");*/
 #endif
-    /*---------------------------------------------------------*/
-
-    /* the 2 elements are not correctly sorted, it is
-       necessary to exchange them */
     t = (h->heapdata)[k];
     (h->heapdata)[k] = (h->heapdata)[j];
     (h->heapdata)[j] = t;
     k = j;
 
 #ifdef DEMO
-
-    /* --------------------------------------------------- */
-    /*PrintHeap(h);*/
 #endif
-    /*---------------------------------------------------------*/
   }
 
   return;
@@ -210,35 +137,19 @@ void FixDownPQ(Heap * h, int k, long int vector[])
       /* Elements are in correct order. */
 
 #ifdef DEMO
-      /* --------------------------------------------------- */
-     /* printf
-          ("FixDown: Compare heap[%d]: %d with heap[%d]: %d => don't exchange\n",
-           k, *((int *) h->heapdata[k]), j, *((int *) h->heapdata[j]));*/
 #endif
       /*---------------------------------------------------------*/
       break;
     }
 #ifdef DEMO
-    /* --------------------------------------------------- */
-    /*printf("FixDown: heap[%d]: %d is smaller than offspring heap[%d]: %d\n",
-           k, *((int *) (h->heapdata)[k]), j, *((int *) (h->heapdata)[j]));
-    printf("\t=> exchange\n");*/
 #endif
-    /*---------------------------------------------------------*/
-
-    /* the 2 elements are not correctly sorted, it is
-       necessary to exchange them */
     t = (h->heapdata)[k];
     (h->heapdata)[k] = (h->heapdata)[j];
     (h->heapdata)[j] = t;
     k = j;
 
 #ifdef DEMO
-
-    /* --------------------------------------------------- */
-    /*PrintHeap(h);*/
 #endif
-    /*---------------------------------------------------------*/
   }
 
   return;
@@ -258,7 +169,7 @@ void FixDownPQ(Heap * h, int k, long int vector[])
  *
  *****************************************************************************/
 
-Heap *NewHeap(int size, int (*less) (Item, Item), void (*print) (Item))
+Heap *NewHeap(int size, int (*less) (Item, Item))
 {
   Heap *h;
 
@@ -266,19 +177,16 @@ Heap *NewHeap(int size, int (*less) (Item, Item), void (*print) (Item))
 
   if (h == ((Heap *) NULL)) 
   {
-    fprintf(stderr, "Error in malloc of heap\n");
     exit(0);
   }
 
   h->n_elements = 0;
   h->less = less;
-  h->print = print;
   h->size = size;
   h->heapdata = (Item *) malloc(size * sizeof(Item));
 
   if (h->heapdata == ((Item *) NULL)) 
   {
-    fprintf(stderr, "Error in malloc of heap data\n");
     exit(0);
   }
 
@@ -313,7 +221,6 @@ Heap *NewHeap(int size, int (*less) (Item, Item), void (*print) (Item))
 int Insert(Heap * h, Item element)
 {
   if (h->n_elements == h->size) {
-    printf("Heap full (size = %d) !\n", h->size);
     return 0;
   }
   h->heapdata[h->n_elements] = element;
@@ -323,6 +230,19 @@ int Insert(Heap * h, Item element)
 
   return 1;
 }
+
+/******************************************************************************
+ * InsertNum()
+ *
+ * Arguments: h - pointer to heap
+ *            i - number
+ * Returns: vopid
+ * Side-Effects: none
+ *
+ * Description: add element at the end of heap and do fixup
+ *
+ *****************************************************************************/
+
 
 void InsertNum(Heap * h, long int i)
 {
@@ -346,7 +266,6 @@ void InsertNum(Heap * h, long int i)
 int Direct_Insert(Heap * h, Item element)
 {
   if (h->n_elements == h->size) {
-    printf("Heap full (size = %d) !\n", h->size);
     return 0;
   }
   h->heapdata[h->n_elements] = element;
@@ -374,7 +293,6 @@ int Direct_Insert(Heap * h, Item element)
 void Modify(Heap * h, int index, Item newvalue)
 {
   if (index > h->n_elements - 1) {
-    printf("Index out of range (index = %d) !\n", index);
     return;
   }
   /* Compares new value  with the value of the element to substitute */
@@ -478,12 +396,19 @@ void CleanHeap(Heap * h)
     return;
 }
 
+/******************************************************************************
+ * FreeHeap()
+ *
+ * Arguments: Heap
+ * Returns: none
+ * Side-Effects: None
+ *
+ * Description: frees the heap
+ *
+ *****************************************************************************/
 
 void FreeHeap(Heap *h)
 {
-  /****************************************************
-   * Insert code here
-   ****************************************************/
    CleanHeap(h);
    free(h->heapdata);
    free(h);
@@ -510,10 +435,6 @@ int VerifyHeap(Heap * h)
     		return 1;
 
     return 0;
-    /****************************************************
-     * Insert VerifyHeap code here
-     ****************************************************/
-
 }
 
 /******************************************************************************
@@ -537,6 +458,16 @@ void Heapify(Heap * h)
   return;
 }
 
+/******************************************************************************
+ * HeapEmpty()
+ *
+ * Arguments: Heap
+ * Returns: void
+ * Side-Effects:
+ *
+ * Description: checks if an heap is empty
+ *
+ *****************************************************************************/
 
 int HeapEmpty(Heap * h)
 {
