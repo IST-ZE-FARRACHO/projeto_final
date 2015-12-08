@@ -55,7 +55,7 @@
 
 LinkedList * initLinkedList(void);
 
-void freeLinkedList(LinkedList * first, void (* freeItemFnt)(Item));
+void freeLinkedList(LinkedList * first);
 
 int lengthLinkedList(LinkedList * first);
 

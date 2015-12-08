@@ -128,8 +128,8 @@ LinkedList * DeleteCarFromList(LinkedList * list, char *id, int * x, int * y, in
 
 void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, LinkedList ** carlist, LinkedList * wait_carlist, int st[], long int wt[])
 {
-	int writeOut, y, x, destinedSpot, destinedAccess, distance = p->G->V, actualPos, prevPos, prevprevPos, i = 0, parent, gotSpot = 0;
-	int pX, pY, pZ, origin, totaltime = new->ta, xspot, yspot, parkedtime, totalweight;
+	int writeOut, y, x, destinedSpot = 0, destinedAccess = 0, distance = p->G->V, actualPos, prevPos, prevprevPos, i = 0, parent, gotSpot = 0;
+	int pX, pY, pZ, origin, totaltime = new->ta, xspot = 0, yspot = 0, parkedtime, totalweight;
 	char tm;
 
 	origin = Get_Pos(new->pos->x, new->pos->y, new->pos->z, p->N, p->M);
