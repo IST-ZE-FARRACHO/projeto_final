@@ -67,7 +67,6 @@ Parking_spot ** CreatesSpotsTable(Park *p)
 
 	if(spots_matrix == NULL)
 	{
-		fprintf((stderr), "Error in malloc of spots matrix.\n");
 		exit(0);
 	}
 
@@ -77,7 +76,6 @@ Parking_spot ** CreatesSpotsTable(Park *p)
 
 		if(spots_matrix[i] == NULL)
 		{
-			fprintf(stderr, "Error in malloc of matrix.\n");
 			exit(0);
 		}
 	}

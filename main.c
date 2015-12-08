@@ -37,30 +37,13 @@ int main(int argc, char *argv[])
 	spots_matrix = CreatesSpotsTable(park);  /*creates matrix*/
 
 	InsertSpotMatrix(park, spots_matrix, st, wt); /*inserts each spot for each access ordered by distance*/
-	printf("\n\n");
-
-	/*for(i = 0; i < park->S; i++)
-	{
-		for(j = 0; j < park->Spots; j++)
-		{
-			printf("%ld  ", spots_matrix[i][j].node);
-		}
-		printf("\n\n");
-	}*/
-
 
 	ReadMoveCars(park, argv[2], spots_matrix, carlist, wait_carlist, st, wt, restrictionlist, restrictsActivator);
 
+	
+
 
 	FreePark(park);
-
-	/*Nó 138
-		Aplicar restrições ----- QUASE CHECK CARALHOOOOO
-		FICHEIRO GRANDE DÁ SEG FAULT
-		erros na impressão
-		Carlist vazia
-		*/
-
 
 		exit(0);
 }

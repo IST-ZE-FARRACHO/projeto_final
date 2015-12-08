@@ -12,6 +12,8 @@
 
 #include "includes.h"
  
+Car * NewCar(char * id, int ta, char type, char inout, int xs, int ys, int zs);
+
 LinkedList * DeleteCarFromList(LinkedList * list, char *, int *, int *, int *);
 
 void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, LinkedList ** carlist, LinkedList * wait_carlist, int st[], long int wt[]);

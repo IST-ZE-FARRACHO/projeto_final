@@ -28,7 +28,6 @@ Restrictions *NewRestrictions(int rest_type, int ta, char inout, int x, int y, i
 
 	if (rest == NULL)
 	{
-		fprintf(stderr, "Error in malloc of restrictions struct.\n");
 		exit(0);
 	}
 
@@ -36,10 +35,8 @@ Restrictions *NewRestrictions(int rest_type, int ta, char inout, int x, int y, i
 
  	if(rest->pos == NULL)
  	{
- 		fprintf(stderr, "Error in malloc of rest->pos.\n");
  		exit(0);
  	}
-
 
 	rest->type = rest_type;
 	rest->ta = ta;
@@ -118,8 +115,6 @@ void UpdateRestrictions(LinkedList * restrictionslist, Park * park, Car * new, P
 		if(nextrestrict->ta > new->ta)
 			return;
 
-		printf("\n%d %d %c %d %d %d\n", nextrestrict->type, nextrestrict->ta, nextrestrict->inout, nextrestrict->pos->x, nextrestrict->pos->y, nextrestrict->pos->z);
-
 		if(nextrestrict->inout == 'E') 
 		{	
 			if(nextrestrict->type == POSITIONREST) 
@@ -130,8 +125,6 @@ void UpdateRestrictions(LinkedList * restrictionslist, Park * park, Car * new, P
 					if( SamePos(park->G->node_info[i].pos, nextrestrict->pos) ) 
 						{	
 							park->G->node_info[i].status = CANT_GO;
-							printf("\nBlocked a position in graph.");
-						
 					
 					if( (park->G->node_info[i].type == EMPTY_SPOT) || (park->G->node_info[i].type == OCCUPIED) ) 
 					{
@@ -144,7 +137,6 @@ void UpdateRestrictions(LinkedList * restrictionslist, Park * park, Car * new, P
 								if(spots_matrix[y][x].node == nmbr)
 									{
 										spots_matrix[y][x].status = CANT_GO; 
-										printf("\nBlocked a position in spots_matrix.");
 									}
 							}
 						}
@@ -161,10 +153,7 @@ void UpdateRestrictions(LinkedList * restrictionslist, Park * park, Car * new, P
 						if(park->G->node_info[spots_matrix[y][x].node].pos->z == nextrestrict->pos->z)
 						{
 							spots_matrix[y][x].status = CANT_GO;
-							printf("\nBlocked a floor in graph.");
 							park->G->node_info[spots_matrix[y][x].node].status = CANT_GO;
-							printf("\nBlocked a floor in spots_matrix.");
-							printf("\n%d %d", x, y);
 						}
 
 					}
@@ -179,29 +168,25 @@ void UpdateRestrictions(LinkedList * restrictionslist, Park * park, Car * new, P
 				for(i = 0; i < park->G->V; i++) 
 				{	
 					if( SamePos(park->G->node_info[i].pos, nextrestrict->pos) )
-						{
-							park->G->node_info[i].status = CAN_GO;
-							printf("\nLifted a position restriction in graph.");
-						
-
-
-						if( (park->G->node_info[i].type == EMPTY_SPOT) || (park->G->node_info[i].type == OCCUPIED) ) 
 					{
-						nmbr = Get_Pos(park->G->node_info[i].pos->x, park->G->node_info[i].pos->y, park->G->node_info[i].pos->z, park->N, park->M);
+						park->G->node_info[i].status = CAN_GO;
 						
-						for(y = 0; y < park->S; y++) 
-						{	
-							for(x = 0; x < park->Spots; x++)
-							{
-								if(spots_matrix[y][x].node == nmbr) 
+						if( (park->G->node_info[i].type == EMPTY_SPOT) || (park->G->node_info[i].type == OCCUPIED) ) 
+						{
+							nmbr = Get_Pos(park->G->node_info[i].pos->x, park->G->node_info[i].pos->y, park->G->node_info[i].pos->z, park->N, park->M);
+						
+							for(y = 0; y < park->S; y++) 
+							{	
+								for(x = 0; x < park->Spots; x++)
+								{
+									if(spots_matrix[y][x].node == nmbr) 
 									{
 										spots_matrix[y][x].status = CAN_GO; 
-										printf("\nLifted a position restriction in matrix.");
 									}
+								}
 							}
 						}
-					}
-				  }
+				  	}
 				}
 			}
 			else 
@@ -214,11 +199,8 @@ void UpdateRestrictions(LinkedList * restrictionslist, Park * park, Car * new, P
 						if(park->G->node_info[spots_matrix[y][x].node].pos->z == nextrestrict->pos->z)
 						{
 							spots_matrix[y][x].status = CAN_GO;
-							printf("\nLifted a floor restriction in matrix.");
 							park->G->node_info[spots_matrix[y][x].node].status = CAN_GO;
-							printf("\nLifted a floor restriction in graph.");
 						}
-
 					}
 				}
 			}
@@ -227,7 +209,4 @@ void UpdateRestrictions(LinkedList * restrictionslist, Park * park, Car * new, P
 		aux = aux->next;
 
 		}
-
-		printf("lol");
-
 }

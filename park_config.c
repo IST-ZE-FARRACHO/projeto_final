@@ -32,7 +32,6 @@ Park *NewPark(int columns, int lines, int entrances, int nr_accesses, int floors
 
 	if (p == (NULL))
 	{
-		fprintf(stderr, "Error in malloc of park.\n");
 		exit(0);
 	}
 
@@ -42,7 +41,6 @@ Park *NewPark(int columns, int lines, int entrances, int nr_accesses, int floors
 
  	if(p->entries == NULL || p->accesses == NULL)
  	{
- 		fprintf(stderr, "Error in malloc of entries/accesses.\n");
  		exit(0);
  	}
 
@@ -52,7 +50,6 @@ Park *NewPark(int columns, int lines, int entrances, int nr_accesses, int floors
  		
  		if(p->entries[i].pos == NULL)
  		{
- 			fprintf(stderr, "Error in malloc of entries/accesses.\n");
  			exit(0);
  		}
  	}
@@ -63,7 +60,6 @@ Park *NewPark(int columns, int lines, int entrances, int nr_accesses, int floors
  		
  		if(p->accesses[i].pos == NULL)
  		{
- 			fprintf(stderr, "Error in malloc of entries/accesses.\n");
  			exit(0);
  		}
  	}	
@@ -134,8 +130,7 @@ int Char_to_Number (char c)
 
 	else
 	{
-		printf("\nMap file is poorly built!\n");
-		exit(1);
+		exit(0);
 	}
 }
 
@@ -233,8 +228,6 @@ int Char_to_Number (char c)
  		actual_node1++;
  		actual_node2++;
  	}
-
- 
  }
 
 
@@ -256,29 +249,24 @@ void Map_to_Park_Graph (Park * p, FILE * f, int _floor)
 	char vector2[p->N]; /*Line storage vector*/
 	int vector1_nr[p->N], vector2_nr[p->N];
 
-	printf("\nFloor number: %d\n", _floor);
-
-	if(fgets(vector2, (p->N+1)*(p->M), f) != NULL); 
-	
-	for(y = p->M-1; y > 0; y--) /*For each one of the lines*/
-	{
-		for (x = 0; x < p->N; x++) /*For each one of the characters*/
+	if(fgets(vector2, (p->N+1)*(p->M), f) != NULL){
+		for(y = p->M-1; y > 0; y--) /*For each one of the lines*/
 		{
-			vector1_nr[x] = Char_to_Number(vector2[x]); /*Converts the symbol into integer and fills the numbers vector*/
-			printf("%d", vector1_nr[x]); /*prints the type of the position on the screen*/
-		}
-		printf("\n");
+			for (x = 0; x < p->N; x++) /*For each one of the characters*/
+			{
+				vector1_nr[x] = Char_to_Number(vector2[x]); /*Converts the symbol into integer and fills the numbers vector*/
+			}
 
-		if(fgets(vector2, (p->N+1)*(p->M), f) != NULL);
-
-		for(x = 0; x < p->N; x++){
-			vector2_nr[x] = Char_to_Number(vector2[x]);
-			if(y == 1)
-				printf("%d", vector2_nr[x]);
+			if(fgets(vector2, (p->N+1)*(p->M), f) != NULL)
+			{
+				for(x = 0; x < p->N; x++)
+				{
+					vector2_nr[x] = Char_to_Number(vector2[x]);
+				}
+			}
+			Get_edges(p, vector1_nr, vector2_nr, p->N, y, y-1, _floor); /*Get edges of the graph*/
 		}
-		Get_edges(p, vector1_nr, vector2_nr, p->N, y, y-1, _floor); /*Get edges of the graph*/
 	}
-	printf("\n\n");
 }
 
 /******************************************************************************
@@ -300,38 +288,40 @@ void Read_Doors_info (Park * p, FILE * f, long int *i, long int *j) /*i, j, decl
 
 	while(doors < p->E + p->S) /*reads lines until the number of entries + accesses is reached*/
 	{
-		if( (fscanf(f, "%s %d %d %d %c", door_name, &door_x, &door_y, &door_z, &door_type)) > 0); /*reads the first line with the dimensions, etc...*/
-		if (door_name[0] == 'E')  /*if its an entry inserts the information in the p->entries vector*/
+		if( (fscanf(f, "%s %d %d %d %c", door_name, &door_x, &door_y, &door_z, &door_type)) > 0) /*reads the first line with the dimensions, etc...*/
 		{
-			strcpy(p->entries[(*i)].name, door_name);
-			p->entries[(*i)].pos->x = door_x;
-			p->entries[(*i)].pos->y = door_y;
-			p->entries[(*i)].pos->z = door_z;
-			printf("Entrance: %s (%d,%d,%d)\n", p->entries[(*i)].name, p->entries[(*i)].pos->x, p->entries[(*i)].pos->y, p->entries[(*i)].pos->z);
-			(*i)++;
-		}
+			if (door_name[0] == 'E')  /*if its an entry inserts the information in the p->entries vector*/
+			{
+				strcpy(p->entries[(*i)].name, door_name);
+				p->entries[(*i)].pos->x = door_x;
+				p->entries[(*i)].pos->y = door_y;
+				p->entries[(*i)].pos->z = door_z;
 
-		else if (door_name[0] == 'A') /*if its an access inserts the information in the p->accesses vector*/
-		{
-			strcpy(p->accesses[(*j)].name, door_name);
-			p->accesses[(*j)].pos->x = door_x;
-			p->accesses[(*j)].pos->y = door_y;
-			p->accesses[(*j)].pos->z = door_z;
-			p->accesses[(*j)].type = door_type;
-			printf("Access: %s (%d,%d,%d)\n", p->accesses[(*j)].name,  p->accesses[(*j)].pos->x,  p->accesses[(*j)].pos->y,  p->accesses[(*j)].pos->z);
-			(*j)++;
-		}
+				(*i)++;
+			}
 
-		else if(door_name[0] == '+') /*if +, finishes the reading about the actual floor*/
-		{
-			break;
-		}
+			else if (door_name[0] == 'A') /*if its an access inserts the information in the p->accesses vector*/
+			{
+				strcpy(p->accesses[(*j)].name, door_name);
+				p->accesses[(*j)].pos->x = door_x;
+				p->accesses[(*j)].pos->y = door_y;
+				p->accesses[(*j)].pos->z = door_z;
+				p->accesses[(*j)].type = door_type;
 
-		else
-		{
-			printf("Invalid door information in park file!\n");
-		}
+				(*j)++;
+			}
+
+			else if(door_name[0] == '+') /*if +, finishes the reading about the actual floor*/
+			{
+				break;
+			}
+
+			else
+			{
+				exit(0);
+			}
 		doors++;
+		}
 	}
 }
 
@@ -377,9 +367,9 @@ Park *ReadFilePark (char * file)
 
 	f = AbreFicheiro(file, "r");
 
-	if( (fscanf(f, "%d %d %d %d %d", &n, &m, &p, &e, &s)) > 0); /*Reads initial file info*/
-
-	if(fgets(line, sizeof(line), f) != NULL); /*carrys on to the second line of the file (line is not used anywhere else)*/
+	if( (fscanf(f, "%d %d %d %d %d", &n, &m, &p, &e, &s)) > 0) /*Reads initial file info*/
+		if(fgets(line, sizeof(line), f) != NULL) /*carrys on to the second line of the file (line is not used anywhere else)*/
+			l = 1;
 
 	new_park = NewPark(n, m, e, s, p); /*creates new park struct*/
 

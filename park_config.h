@@ -10,9 +10,7 @@
  #ifndef park_config_H
  #define park_config_H
 
- #include "defs.h"
- #include "tools.h"
- #include "graph.h"
+ #include "includes.h"
 
  Park *NewPark(int, int, int, int, int);
 

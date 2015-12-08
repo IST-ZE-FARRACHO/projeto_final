@@ -55,7 +55,7 @@ LinkedList * initLinkedList(void)
  *  Return value:
  *    None
  */
-void freeLinkedList(LinkedList * first, void (* freeItemFnt)(Item))
+void freeLinkedList(LinkedList * first)
 {
   LinkedList * next;
   LinkedList * aux;

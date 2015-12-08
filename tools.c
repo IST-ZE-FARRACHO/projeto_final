@@ -18,7 +18,6 @@
 
  	 if (f == NULL) 
  	 {
-  	  fprintf(stderr, "Error: Unable to open park-config file %s\n.", name);
   	  exit(0);
  	 }
  	 return f;
@@ -50,7 +49,6 @@ LinkedList * ListCreator()
 
 	if (abstractlist == NULL) 
 	{
-		fprintf(stderr, "Error in malloc of new LinkedList.\n");
 		exit(0);
 	}
 
@@ -182,8 +180,7 @@ char * GetOutputName(char * file)
     
   if(fileNameOut == NULL)
   {
-    printf("Memory allocation error for fileNameOut.\n");
-    exit(1); 
+    exit(0); 
   }
 
     fileNameOut[strlen(file) - 4] = '\0';
@@ -226,8 +223,7 @@ int escreve_saida(FILE *fp, char *vid, int tk, int pX, int pY, int pZ, char tm)
   char *bogus = "??";
 
   if(fp == NULL) {
-    fprintf(stderr, "Ficheiro invalido.\n");
-    exit(1);
+    exit(0);
   }
 
   /* check for valid range of values and valid type of move */

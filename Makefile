@@ -5,7 +5,6 @@
 CC=gcc
 TARGET=autopark
 CFLAGS= -Wall -ansi -O3
-LIBS= -lm
 
 SRCFILES= main.c cars.c graph.c heap.c LinkedList.c park_config.c restrictions.c spots.c tools.c
 INCFILES= defs.h includes.h cars.h graph.h heap.h LinkedList.h park_config.h restrictions.h spots.h tools.h
@@ -14,7 +13,7 @@ OBJFILES= main.o cars.o graph.o heap.o LinkedList.o park_config.o restrictions.o
 default: $(TARGET)
 
 $(TARGET): $(OBJFILES)
-	$(CC) $(CFLAGS) $(SRCFILES) -o $(TARGET) $(LIBS)
+	$(CC) $(CFLAGS) $(SRCFILES) -o $(TARGET)
 
 clean:
 	rm -f $(TARGET) $(OBJFILES) core.* #*

@@ -27,7 +27,6 @@ link * NEW(int v, int weight, link *next)
 
 	if (x == NULL)
 	{
-		fprintf(stderr, "Error in malloc of node.\n");
 		exit(0);
 	}
 
@@ -56,7 +55,7 @@ Edge * EDGE(int v, int w, int weight)
 
 	if(e == NULL)
 	{
-		fprintf(stderr, "Error in malloc of edge.\n");
+		exit(0);
 	}
 
 	e->v = v;
@@ -83,7 +82,6 @@ Graph *GRAPHinit(long int V)
 
 	if(G == NULL)
 	{
-		fprintf(stderr, "Error in malloc of graph.\n");
 		exit(0);
 	}
 
@@ -94,7 +92,6 @@ Graph *GRAPHinit(long int V)
 
 	if(G->adj == NULL || G->node_info == NULL)
 	{
-		fprintf(stderr, "Error in malloc of graph vectors.\n");
 		exit(0);
 	}
 
@@ -104,7 +101,6 @@ Graph *GRAPHinit(long int V)
 
 		if(G->node_info[i].pos == NULL)
 		{
-			fprintf(stderr, "Error in malloc of graph nodes information vector.\n");
 			exit(0);
 		}
 	} 
@@ -234,25 +230,6 @@ int LessNumPQ (Item a, Item b)
 }
 
  /******************************************************************************
- * PrintNumPQ()
- *
- * Arguments: Item hi
- *
- * Description: Prints a number
- *
- *****************************************************************************/
-
-void PrintNumPQ(Item hi)
-{
-  int num;
-
-  num = *((int *) hi);
-  printf("%3d", num);
-
-  return;
-}
-
- /******************************************************************************
  * GRAPHpfs()
  *
  * Arguments: G - graph
@@ -271,7 +248,8 @@ void GRAPHpfs(Graph *G, long int s, int st[], long int wt[], int passTroughSpot)
 
  	Heap * queue;
 
- 	queue = NewHeap(G->V, LessNumPQ, PrintNumPQ);
+ 	queue = NewHeap(G->V, LessNumPQ);
+
  	for(v = 0; v < G->V; v++)
  	{
  		st[v] = -1;
@@ -281,16 +259,19 @@ void GRAPHpfs(Graph *G, long int s, int st[], long int wt[], int passTroughSpot)
 
  	wt[s] = 0.0;
  	FixDownPQ(queue, s, wt);
+
  	for(i = 0; i < G->V; i++)
- 		while(HeapEmpty(queue) != 1){
+ 		while(HeapEmpty(queue) != 1)
+ 		{
  			v = RemoveMin(queue, wt);
  			if(wt[v] != maxWT)
  			{
- 				for(t = G->adj[v]; t != NULL; t = t->next){
+ 				for(t = G->adj[v]; t != NULL; t = t->next)
+ 				{
  					if(passTroughSpot == 1 && count == 0)
  					{
 
-  						if(wt[w = t->v] > P  && G->node_info[v].status != CANT_GO)
+  						if(wt[w = t->v] > P)
  						{
  							wt[w] = P;
  							FixDownPQ(queue, w, wt);
