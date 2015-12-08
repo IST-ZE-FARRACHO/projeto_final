@@ -1,0 +1,39 @@
+#
+# Makefile for Park program
+#
+CFLAGS= -Wall -ansi -O3
+
+autopark: main.o cars.o graph.o heap.o LinkedList.o park_config.o restrictions.o spots.o tools.o
+	 gcc -o autopark main.o cars.o graph.o heap.o LinkedList.o park_config.o restrictions.o spots.o tools.o
+
+main.o: main.c includes.h
+	gcc $(CFLAGS) main.c
+
+cars.o: cars.c includes.h
+	gcc $(CFLAGS) cars.c
+
+graph.o: graph.c includes.h
+	gcc $(CFLAGS) graph.c
+
+heap.o: heap.c includes.h
+	gcc $(CFLAGS) heap.c
+
+LinkedList.o: LinkedList.c includes.h
+	gcc $(CFLAGS) LinkedList.c
+
+park_config.o: park_config.c includes.h
+	gcc $(CFLAGS) park_config.c
+
+restrictions.o: restrictions.c includes.h
+	gcc $(CFLAGS) restrictions.c
+
+spots.o: spots.c includes.h
+	gcc $(CFLAGS) spots.c
+
+tools.o: tools.c includes.h
+	gcc $(CFLAGS) tools.c
+
+clean:
+	rm -f *.o autopark
+
+
