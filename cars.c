@@ -70,6 +70,7 @@ Car * NewCar(char * id, int ta, char type, char inout, int xs, int ys, int zs)
 
 LinkedList * DeleteCarFromList(LinkedList * list, char *id, int * x, int * y, int * z)
 {
+
 	int counter = 0;
 	Car * searchcar;
 	LinkedList * aux = list, * prev = aux;
@@ -136,22 +137,26 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 
 	GRAPHpfs(p->G, origin, st, wt, 0);
 
-	/*get parking spot*/
-	for(y = 0; y < p->S; y++)
+	/* Get best parking spot */
+
+	for(y = 0; y < p->S; y++) /* For each one of the accesses */
 	{
-		if(p->accesses[y].type == new->type)
+		if(p->accesses[y].type == new->type) /* If the access matches the new car wanted access */
 		{
-			for(x = 0; x < p->Spots; x++)
+			for(x = 0; x < p->Spots; x++) /* For each one of the spots in the park */
 			{
-				if(spots_matrix[y][x].status == CAN_GO)
+				if(spots_matrix[y][x].status == CAN_GO) /* If the spot has a CAN_GO status */
 				{
-					if(spots_matrix[y][x].distance < distance)
+					if(spots_matrix[y][x].distance < distance) /* Saves minimum distance */
 					{
-						destinedSpot = spots_matrix[y][x].node;
-						distance = spots_matrix[y][x].distance + wt[spots_matrix[y][x].node];
+						destinedSpot = spots_matrix[y][x].node; /* That is the node we want to reach */
+						distance = spots_matrix[y][x].distance; /* New distance is the new minimum distance */
 						xspot = x;
 						yspot = y;
 						destinedAccess = Get_Pos(p->accesses[y].pos->x, p->accesses[y].pos->y, p->accesses[y].pos->z, p->N, p->M);
+
+						printf("\n %d %d %d \n", p->accesses[y].pos->x, p->accesses[y].pos->y, p->accesses[y].pos->z);
+
 						gotSpot = 1;
 					}
 				}
@@ -166,15 +171,17 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 	}
 
 	else
-	{			
+	{	
 		/*get path*/
 		int carPathBackwards[wt[destinedSpot]];
 		carPathBackwards[i] = parent = destinedSpot;
 
 		while(parent != origin)
-		{
+		{	
 			i++;
+			
 			carPathBackwards[i] = st[parent];
+		
 			parent = st[parent];
 		}
 
@@ -189,7 +196,11 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 		/*write movement*/
 		totaltime++;
 		prevPos = prevprevPos = origin;
+
+		printf("\n \n actualpos: %d %d %d \n \n", p->G->node_info[actualPos].pos->x,  p->G->node_info[actualPos].pos->y,  p->G->node_info[actualPos].pos->z);
 		actualPos = carPathBackwards[--i];
+		printf("\n \n actualpos: %d %d %d \n \n", p->G->node_info[actualPos].pos->x,  p->G->node_info[actualPos].pos->y,  p->G->node_info[actualPos].pos->z);
+
 		tm = 'm';
 
 		while(actualPos != destinedSpot)
@@ -206,6 +217,9 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 			prevprevPos = prevPos;
 			prevPos = actualPos;
 			actualPos = carPathBackwards[--i];
+
+			printf("\n \n actualpos: %d %d %d \n \n", p->G->node_info[actualPos].pos->x,  p->G->node_info[actualPos].pos->y,  p->G->node_info[actualPos].pos->z);
+
 			totaltime++;
 		}
 
@@ -229,7 +243,20 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 		spots_matrix[yspot][xspot].status = CANT_GO;
 
 		GRAPHpfs(p->G, actualPos, st, wt, 1);
-	
+
+
+
+
+		printf("\n \n teste: %d %d %d \n \n", p->G->node_info[actualPos].pos->x,  p->G->node_info[actualPos].pos->y,  p->G->node_info[actualPos].pos->z);
+
+
+		GRAPHpfs(p->G, actualPos, st, wt, 1);
+
+		for(i = 0; i < p->G->V; i++)
+		printf("Parent: %d  Distance: %ld   Node: %d   Coord: %d %d %d\n", st[i], wt[i], i, p->G->node_info[i].pos->x, p->G->node_info[i].pos->y, p->G->node_info[i].pos->z);
+		
+		printf("\n %ld %ld\n", wt[76], wt[68]);
+
 		i = 0;
 		int PedPathBackwards[wt[destinedAccess]];
 		PedPathBackwards[i] = parent = destinedAccess;
@@ -244,6 +271,9 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 
 		prevPos = prevprevPos = destinedSpot;
 		actualPos = PedPathBackwards[--i];
+
+		printf("\n \n actualpos: %d %d %d \n \n", p->G->node_info[actualPos].pos->x,  p->G->node_info[actualPos].pos->y,  p->G->node_info[actualPos].pos->z);
+
 		tm = 'p';
 		totaltime++;
 
@@ -261,6 +291,9 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 			prevprevPos = prevPos;
 			prevPos = actualPos;
 			actualPos = PedPathBackwards[--i];
+
+			printf("\n \n actualpos: %d %d %d \n \n", p->G->node_info[actualPos].pos->x,  p->G->node_info[actualPos].pos->y,  p->G->node_info[actualPos].pos->z);
+
 			totaltime++;
 		}
 
@@ -276,7 +309,9 @@ void WriteParkPath(FILE *fp, Park * p, Car * new, Parking_spot ** spots_matrix, 
 		}
 
 		writeOut = escreve_saida(fp, new->id, totaltime, pX, pY, pZ, tm);
+
 		totaltime += timeWaitList;
+
 		fprintf(fp, "%s %d %d %d %d x\n", new->id, new->ta, parkedtime, totaltime, totalweight);
 	}
 }
@@ -302,7 +337,9 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
 	 FILE *f; 
 	 FILE *output;
 
+
 	 int n, tmpta, tmpxs, tmpys, tmpzs, leavePos, y, x, xpos = 0, ypos = 0, zpos = 0, timeWaitList;
+
 	 char tmptype;
 	 char tmpid[5];
 	 char * fileNameOut = GetOutputName(file);
@@ -314,6 +351,7 @@ void ReadMoveCars(Park * p, char * file, Parking_spot ** spots_matrix, LinkedLis
 
  	do{	
  		timeWaitList = 0;
+
  		n = fscanf(f, "%s %d %c %d %d %d", tmpid, &tmpta, &tmptype, &tmpxs, &tmpys, &tmpzs); /* Reads each line*/
 
  		if( n < 3 ) continue;

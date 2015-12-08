@@ -40,9 +40,6 @@ int main(int argc, char *argv[])
 
 	ReadMoveCars(park, argv[2], spots_matrix, carlist, wait_carlist, st, wt, restrictionlist, restrictsActivator);
 
-
-	FreePark(park);
-
 	/*Nó 138
 		Aplicar restrições ----- QUASE CHECK CARALHOOOOO
 		FICHEIRO GRANDE DÁ SEG FAULT
@@ -50,6 +47,7 @@ int main(int argc, char *argv[])
 		Carlist vazia
 		*/
 
+	FreePark(park);
 
 		exit(0);
 }

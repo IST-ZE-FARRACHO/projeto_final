@@ -249,6 +249,7 @@ void GRAPHpfs(Graph *G, long int s, int st[], long int wt[], int passTroughSpot)
  	Heap * queue;
 
  	queue = NewHeap(G->V, LessNumPQ);
+
  	for(v = 0; v < G->V; v++)
  	{
  		st[v] = -1;
@@ -258,6 +259,7 @@ void GRAPHpfs(Graph *G, long int s, int st[], long int wt[], int passTroughSpot)
 
  	wt[s] = 0.0;
  	FixDownPQ(queue, s, wt);
+ 	
  	for(i = 0; i < G->V; i++)
  		while(HeapEmpty(queue) != 1){
  			v = RemoveMin(queue, wt);
